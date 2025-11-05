@@ -3,42 +3,43 @@ import { NavItem } from "../models/nav-item.model";
 export const SIDEBAR_NAV_ITEMS: NavItem[] = [
   // --- MÓDULO PROGRAMACIÓN ---
   {
-    displayName: 'MODULO PROGRAMACION',
+    displayName: 'Módulo Programación',
     requiredRole: 'supervisor_prog', 
     children: [
-      { displayName: 'REQ. NO ATENDIDOS', route: '/prog/no-atendidos' },
-      { displayName: 'REQ. ATENDIDOS', route: '/prog/atendidos' }
+      { displayName: 'REQ. NO ATENDIDOS', route: '/GestionProgramacion/no-atendidos' },
+      { displayName: 'REQ. ATENDIDOS', route: '/GestionProgramacion/atendidos' }
     ]
   },
 
   // --- MÓDULO DISTRIBUCIÓN ---
   {
-    displayName: 'MODULO DISTRIBUCIÓN',
+    displayName: 'Módulo Distribución',
     requiredRole: 'supervisor_dist',
     children: [
-      { displayName: 'ASIGNACIÓN DE VEHICULOS', route: '/dist/asignacion' },
-      { displayName: 'MONITOREO DE VEHICULOS', route: '/dist/monitoreo' },
-      { displayName: 'REPORTES DE ENTREGAS', route: '/dist/reportes' }
+      { displayName: 'ASIGNACIÓN DE VEHICULOS', route: '/GestionDistribucion/asignacion' },
+      { displayName: 'MONITOREO DE VEHICULOS', route: '/GestionDistribucion/monitoreo' },
+      { displayName: 'REPORTES DE ENTREGAS', route: '/GestionDistribucion/entregas' }
     ]
   },
 
   // --- MÓDULO COMPRAS ---
   {
-    displayName: 'MODULO COMPRAS',
+    displayName: 'Módulo Compras',
     requiredRole: 'supervisor_comp',
     children: [
-      { displayName: 'LISTAS DE ORDENES', route: '/compras/ordenes' },
-      { displayName: 'GESTION DE PROVEEDORES', route: '/compras/proveedores' }
+      { displayName: 'LISTAS DE ORDENES', route: '/GestionCompras/ordenes' },
+      { displayName: 'GESTION DE PROVEEDORES', route: '/GestionCompras/proveedores' }
     ]
   },
 
   // --- MÓDULO ALMACEN ---
   {
-    displayName: 'Módulo Almacen',
+    displayName: 'Módulo Almacén',
     requiredRole: 'supervisor_alm',
     children: [
       { displayName: 'Gestionar Lotes', route: '/GestionAlmacenamiento/lotes' },
       { displayName: 'Ver Inventario', route: '/GestionAlmacenamiento/inventario' }
+    
     ]
   }
 ];

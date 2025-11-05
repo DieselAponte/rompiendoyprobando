@@ -14,7 +14,7 @@
 /* Estilo para el estado de "hover" (cuando el mouse pasa por encima) */
 .sub-item-link:hover {
     background-color: #f0f0f0; /* Un fondo gris claro para resaltar */
-    color: #007bff; /* Color primario para el texto al pasar el ratón */
+    color: #1e3a8a; /* Color primario para el texto al pasar el ratón */
     cursor: pointer; /* Indica que es un elemento en el que se puede hacer clic */
 }
 

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardLayoutComponent } from './dashboard-layout/dashboard-layout.component';
 import {RouterModule} from '@angular/router';
-import { Sidebar } from './navigation-sidebar-components/sidebar/sidebar';
 
 // Material modules
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -28,7 +27,8 @@ import { MatHeaderRow, MatHeaderCell } from "@angular/material/table";
     MatIconModule,
     MatListModule,
     MatHeaderRow,
-    MatHeaderCell
+    MatHeaderCell,
+    
 ],
   exports: [DashboardLayoutComponent]
 })

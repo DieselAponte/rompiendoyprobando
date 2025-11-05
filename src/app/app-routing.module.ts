@@ -21,23 +21,23 @@ const routes: Routes = [
         loadChildren: () => import('./features/GestionProgramacion/programacion.module')
           .then(m => m.ProgramacionModule)
       },
-      // {
-      //   path: 'GestionCompras',
-      //   loadChildren: () => import('./features/GestionCompras/compras.module')
-      //     .then(m => m.ComprasModule)
-      // },
-      // {
-      //   path: 'GestionDistribucion',
-      //   loadChildren: () => import('./features/GestionDistribucion/distribucion.module')
-      //     .then(m => m.DistribucionModule)
-      // },
+      {
+        path: 'GestionCompras',
+        loadChildren: () => import('./features/GestionCompras/compras.module')
+          .then(m => m.ComprasModule)
+      },
+      {
+        path: 'GestionDistribucion',
+        loadChildren: () => import('./features/GestionDistribucion/distribucion.module')
+          .then(m => m.DistribucionModule)
+      },
       {
         path: 'GestionAlmacenamiento',
         loadChildren: () => import('./features/GestionAlmacenamiento/almacenamiento.module')
           .then(m => m.AlmacenamientoModule)
       },
       // Redirección al login si no hay ruta
-      { path: '', redirectTo: '/login', pathMatch: 'full' }
+      //{ path: '', redirectTo: '/login', pathMatch: 'full' }
     ]
   },
 

@@ -26,7 +26,7 @@
 /* Estilo para cuando el módulo está activo/expandido */
 .module-header.module-expanded {
     background-color: #f8f9fa; /* Un color de fondo diferente para el estado expandido */
-    color: #007bff; /* Color primario para el texto cuando está expandido */
+    color: #1e3a8a; /* Color primario para el texto cuando está expandido */
 }
 
 /* --- 3. Icono de Flecha --- */
