@@ -2,7 +2,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/user-services/auth.service';
+import { AuthService, AuthUser } from 'src/app/core/services/user-services/auth.service';
+import { PermissionService } from 'src/app/core/services/user-services/permission.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private permissionService: PermissionService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -32,15 +34,15 @@ export class LoginComponent {
 
     const { username, password } = this.loginForm.value;
     this.authService.login(username, password).subscribe({
-      next: (user) => {
+      next: (user: AuthUser) => {
         console.log('Usuario autenticado:', user);
-        // Navegar a la ruta definida en AppRoutingModule
-        this.router.navigate(['/GestionAlmacenamiento'])
-          .then((ok) => {
-            // desactivar loading cuando la navegación complete (ok = true si tuvo éxito)
-            this.isLoading = false;
-          })
-          .catch((err) => {
+        // Setear rol en PermissionService para filtrar navegación
+        this.permissionService.setRole(user.role);
+        // Obtener ruta inicial según rol
+        const firstRoute = this.permissionService.getFirstAccessibleRouteForRole(user.role) || '/';
+        this.router.navigate([firstRoute])
+          .then(() => this.isLoading = false)
+          .catch(err => {
             console.error('Error en navegación:', err);
             this.isLoading = false;
           });

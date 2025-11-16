@@ -1,12 +1,15 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { ListaAtendidosComponent } from "./pages/lista-atendidos/lista-atendidos.component";
-import { ListaNoAtendidosComponent } from "./pages/lista-no-atendidos/lista-no-atendidos.component";
-
+import {DisponibilidadProductoComponent} from "./pages/disponibilidad-producto/disponibilidad-producto.component";
+import { ListaRequerimientosComponent } from './pages/lista-requerimientos/lista-requerimientos.component';
+// Se agrega ruta con parámetro para navegar a la disponibilidad de un requerimiento específico
 const routes: Routes = [
-  { path: '', component: ListaAtendidosComponent},
-  { path: 'no-atendidos', component: ListaNoAtendidosComponent},
-  { path: 'atendidos', component: ListaAtendidosComponent},
+  { path: '', component: ListaRequerimientosComponent },
+  { path: 'lista-requerimiento', component: ListaRequerimientosComponent },
+  // Ruta previa sin id (mantener si algún componente legacy la usa)
+  { path: 'disponibilidad-producto', component: DisponibilidadProductoComponent },
+  // Nueva ruta con parámetro id del requerimiento
+  { path: 'disponibilidad-producto/:id', component: DisponibilidadProductoComponent },
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

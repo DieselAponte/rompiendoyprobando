@@ -36,8 +36,8 @@ const routes: Routes = [
         loadChildren: () => import('./features/GestionAlmacenamiento/almacenamiento.module')
           .then(m => m.AlmacenamientoModule)
       },
-      // Redirección al login si no hay ruta
-      //{ path: '', redirectTo: '/login', pathMatch: 'full' }
+      
+      { path: '', redirectTo: '/login', pathMatch: 'full' }
     ]
   },
 

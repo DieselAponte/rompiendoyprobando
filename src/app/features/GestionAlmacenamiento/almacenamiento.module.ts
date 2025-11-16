@@ -20,9 +20,10 @@ import { PopupRegistroIncidenciaComponent } from './overlays/popup-registro-inci
 import {PopupReporteLoteComponent} from './overlays/popup-reporte-lote/popup-reporte-lote.component';
 
 //Pages
-import {ListaInventario} from './pages/lista-inventario/lista-inventario';
+import {ListaInventarioComponent} from './pages/lista-inventario/lista-inventario.component';
 import { ListaLotesComponent } from './pages/lista-lotes/lista-lotes.component';
 import { RegistroLoteComponent } from './pages/registro-lote/registro-lote.component';
+import { ListaInventarioTableComponent } from './components/lista-inventario-table/lista-inventario-table.component';
 
 
 @NgModule({
@@ -30,6 +31,8 @@ import { RegistroLoteComponent } from './pages/registro-lote/registro-lote.compo
     ListaLotesComponent,
     LotesRecibidosTableComponent,
     LotesAtendidosTableComponent,
+    ListaInventarioTableComponent,
+    ListaInventarioComponent,
     PopupRegistroIncidenciaComponent,
     PopupReporteLoteComponent,
     RegistroLoteComponent

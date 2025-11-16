@@ -1,15 +1,22 @@
-import { Injectable } from '@angular/core';
-import { signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { SIDEBAR_NAV_ITEMS } from '../../constants/navigation-data';
 import { NavItem } from '../../models/nav-item.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PermissionService {
-  
-  // 'supervisor_comp', 'supervisor_dist', 'supervisor_alm', 'supervisor_prog'
-  private userRole = signal<string>('supervisor_alm'); 
+  // Signal del rol actual (null hasta login)
+  private userRole = signal<string | null>(null);
+
+  constructor(private authService: AuthService) {
+    // Inicializar desde localStorage si existe sesión previa
+    const stored = this.authService.getCurrentUser();
+    if (stored?.role) {
+      this.userRole.set(stored.role);
+    }
+  }
 
   getCurrentRole() {
     return this.userRole.asReadonly();
@@ -20,28 +27,21 @@ export class PermissionService {
   }
 
   hasAccess(requiredRole: string | undefined): boolean {
-    // Si el ítem no requiere un rol específico, es visible (true).
-    if (!requiredRole) {
-      return true;
-    }
-    
-    // Si el rol del usuario coincide con el rol requerido, es visible.
-    return this.userRole() === requiredRole;
+    if (!requiredRole) return true;
+    const current = this.userRole();
+    if (!current) return false;
+    return current === requiredRole;
   }
 
-  
   getFilteredNavItems(): NavItem[] {
-    const role = this.userRole();
-    
-    
-    return SIDEBAR_NAV_ITEMS.filter(module => {
-      // 1. Si el módulo tiene un children, debe ser un módulo y lo filtramos por su rol.
-      if (module.children && module.requiredRole) {
-        return this.hasAccess(module.requiredRole);
-      }
-      
-      
-      return false; 
-    });
+    return SIDEBAR_NAV_ITEMS.filter(item => this.hasAccess(item.requiredRole));
+  }
+
+  getFirstAccessibleRouteForRole(role: string): string | null {
+    const module = SIDEBAR_NAV_ITEMS.find(m => m.requiredRole === role);
+    if (!module) return null;
+    // Tomar primer child con route
+    const child = module.children?.find(c => !!c.route);
+    return child?.route || null;
   }
 }

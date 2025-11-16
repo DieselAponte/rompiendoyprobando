@@ -1,0 +1,14 @@
+<div class="page-container">
+    <h2>Ver inventario</h2>
+
+    <mat-card class="card-section">
+        <h3>Lotes Almacenados</h3>
+        <app-lista-inventario-table [data]="lotesAlmacenados">
+        </app-lista-inventario-table>
+    </mat-card>
+
+    <!-- Popup reporte de lote
+    <app-popup-reporte-lote *ngIf="reporteSeleccionado" [reporte]="reporteSeleccionado" (close)="cerrarPopup()"
+        (resolverIncidencia)="handleResolverIncidencia($event)">
+    </app-popup-reporte-lote> -->
+</div>

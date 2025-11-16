@@ -7,6 +7,7 @@ import { AlmacenamientoService, LoteRecibido, LoteAtendido } from '../../service
   standalone: false,
   styleUrls: ['./lista-lotes.component.css']
 })
+  
 export class ListaLotesComponent implements OnInit {
   lotesRecibidos: LoteRecibido[] = [];
   lotesAtendidos: LoteAtendido[] = [];
