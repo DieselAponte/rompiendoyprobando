@@ -1,0 +1,49 @@
+<div class="popup-overlay">
+    <div class="popup-container">
+        <div class="popup-header">
+            <h3>Proveedores disponibles</h3>
+        </div>
+        <div class="table-container">
+            <table mat-table [dataSource]="data" class="mat-elevation-z2">
+
+                <ng-container matColumnDef="id_puntoVenta">
+                    <th mat-header-cell *matHeaderCellDef> ID Punto Venta </th>
+                    <td mat-cell *matCellDef="let pv"> {{ pv.id_puntoVenta }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre_puntoVenta">
+                    <th mat-header-cell *matHeaderCellDef> Nombre Punto Venta </th>
+                    <td mat-cell *matCellDef="let pv"> {{ pv.nombre_puntoVenta }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="id_producto">
+                    <th mat-header-cell *matHeaderCellDef> ID Producto </th>
+                    <td mat-cell *matCellDef="let pv"> {{ pv.id_producto }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre_producto">
+                    <th mat-header-cell *matHeaderCellDef> Nombre Producto </th>
+                    <td mat-cell *matCellDef="let pv"> {{ pv.nombre_producto }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="stock_producto">
+                    <th mat-header-cell *matHeaderCellDef> Stock Producto </th>
+                    <td mat-cell *matCellDef="let pv"> {{ pv.stock_producto }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="accion">
+                    <th mat-header-cell *matHeaderCellDef> Acción </th>
+                    <td mat-cell *matCellDef="let pv">
+                        <button mat-button color="primary" (click)="seleccionarProveedor.emit(pv)">
+                            Seleccionar
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <button mat-stroked-button color="primary" (click)="close.emit()">Cerrar</button>
+    </div>
+</div>

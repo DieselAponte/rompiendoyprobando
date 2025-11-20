@@ -1,0 +1,42 @@
+<div class="form-container" *ngIf="lote">
+    <h2>Formulario de Registro de Lote</h2>
+
+    <section>
+        <h3>ID Proveedor - Nombre de Laboratorio Proveedor</h3>
+        <textarea readonly>{{ lote.id_proveedor }} - Farmacéutica PeruServ</textarea>
+
+        <h3>ID Orden de Compra</h3>
+        <textarea readonly>{{ lote.id_orden_comp }}</textarea>
+
+        <h3>ID Producto - Nombre del Producto</h3>
+        <textarea readonly>{{ lote.id_producto }} - Aspirina</textarea>
+
+        <h3>Cant. y Tipo de envase</h3>
+        <textarea readonly>{{ lote.cantidad }} - Cápsulas</textarea>
+
+        <h3>ID Lote</h3>
+        <textarea readonly>{{ lote.lote }}</textarea>
+
+        <h3>Fecha de caducidad de Lote</h3>
+        <textarea readonly>{{ lote.fecha_caducidad }}</textarea>
+
+        <h3>Observaciones del Lote Recibido</h3>
+        <textarea [(ngModel)]="observaciones"></textarea>
+    </section>
+
+    <div class="buttons">
+        <button mat-stroked-button color="primary" (click)="volver()">Volver</button>
+        <button mat-stroked-button color="warn" (click)="registrarConIncidencia()">Registrar Lote con
+            incidencia</button>
+        <button mat-raised-button color="primary" (click)="registrarRecepcion()">Registrar recepción de Lote</button>
+    </div>
+</div>
+
+<div *ngIf="!lote" class="loading">
+    <p>Cargando información del lote...</p>
+</div>
+
+<!-- Popup para registrar incidencia desde el formulario de registro de lote -->
+<app-popup-registro-incidencia *ngIf="mostrarPopupIncidencia" (close)="cerrarPopupIncidencia()"
+    (registrarIncidencia)="handleRegistrarIncidencia($event)">
+</app-popup-registro-incidencia>

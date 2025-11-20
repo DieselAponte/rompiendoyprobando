@@ -1,0 +1,54 @@
+<div class="popup-overlay">
+    <div class="popup-container">
+        <h3>Reporte de Aceptación de Lote</h3>
+
+        <div class="info-section">
+            <p><strong>Código de Reporte:</strong> {{ reporte.codigoReporte }}</p>
+            <p><strong>Proveedor:</strong> {{ reporte.proveedor }}</p>
+            <p><strong>Fecha de recepción:</strong> {{ reporte.fechaRecepcion }}</p>
+        </div>
+
+        <h4>Productos Declarados</h4>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Producto</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Tipo de envase</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let producto of reporte.productosDeclarados">
+                        <td>{{ producto.id }}</td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.cantidad }}</td>
+                        <td>{{ producto.tipoEnvase }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><strong>Responsable de Transporte:</strong> {{ reporte.transporte }}</p>
+
+        <!-- Sección de incidencia, solo si existe -->
+        <div *ngIf="reporte.incidencia" class="incidencia-section">
+            <h4>Detalles de Incidencia</h4>
+            <p><strong>Código de Incidencia:</strong> {{ reporte.incidencia.codigo }}</p>
+            <p><strong>Descripción:</strong> {{ reporte.incidencia.descripcion }}</p>
+            <p><strong>Prioridad del reenvío:</strong> {{ reporte.incidencia.prioridad }}</p>
+            <p><strong>Estado:</strong>
+                <span [ngClass]="{ 'resuelta': reporte.incidencia.estado === 'Resuelta' }">
+                    {{ reporte.incidencia.estado }}
+                </span>
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button class="resolve-btn" *ngIf="reporte.incidencia && reporte.incidencia.estado === 'Pendiente'"
+                (click)="marcarComoResuelta()">Marcar como resuelta</button>
+            <button class="back-btn" (click)="volver()">Volver</button>
+        </div>
+    </div>
+</div>
