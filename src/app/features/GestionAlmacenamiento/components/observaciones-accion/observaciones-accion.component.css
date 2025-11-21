@@ -1,0 +1,13 @@
+.observaciones-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+.observaciones-field {
+  width: 100%;
+}
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+}

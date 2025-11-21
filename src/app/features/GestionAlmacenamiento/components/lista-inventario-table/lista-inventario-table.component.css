@@ -16,3 +16,12 @@ th {
 button {
   color: #1e3a8a;
 }
+
+.selected-row {
+  background-color: #e3f2fd !important;
+}
+
+.selected-btn {
+  font-weight: bold;
+  background-color: #bbdefb;
+}
