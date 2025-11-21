@@ -13,6 +13,7 @@ export class SearchInfoDigemidComponent {
   productoEncontrado: Producto | null = null;
   mensajeError: string = '';
   cantidadTexto: string = '';
+  mensajeOk: string = '';
 
   @Output() agregarProducto = new EventEmitter<{ producto: Producto; cantidad: number }>();
 
@@ -22,6 +23,7 @@ export class SearchInfoDigemidComponent {
 
   buscar(): void {
     this.mensajeError = '';
+    this.mensajeOk = '';
     this.productoEncontrado = null;
     if (!this.codigoDigemid || this.codigoDigemid.trim().length === 0) {
       this.mensajeError = 'Ingrese un código DIGEMID.';
@@ -50,7 +52,12 @@ export class SearchInfoDigemidComponent {
       return;
     }
     this.agregarProducto.emit({ producto: this.productoEncontrado, cantidad });
-    // Limpia cantidad pero deja producto visible por si agregan más
+    // Mensaje de confirmación y limpieza para permitir nuevo producto
+    this.mensajeOk = 'Producto agregado correctamente';
     this.cantidadTexto = '';
+    this.codigoDigemid = '';
+    // Limpia producto encontrado para forzar nueva búsqueda
+    this.productoEncontrado = null;
+    setTimeout(() => (this.mensajeOk = ''), 3000);
   }
 }

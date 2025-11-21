@@ -45,6 +45,14 @@ export class ListaInventarioComponent implements OnInit {
     this.selected = item;
   }
 
+  verReporteLote(item: Inventario) {
+    // Navegación asumida hacia una ruta de reporte de lote.
+    // Ajustar si se requiere abrir overlay/dialog en lugar de navegar.
+    this.router.navigate(['/GestionAlmacenamiento/reporte-lote'], {
+      queryParams: { lote: item.id_lote },
+    });
+  }
+
   registrarSalida() {
     const inventarioId = this.selected?.id_inventario;
     this.router.navigate(['/GestionAlmacenamiento/registro-salida'], {

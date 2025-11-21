@@ -5,6 +5,7 @@
         <button mat-stroked-button color="primary" (click)="buscar()">Buscar</button>
     </div>
     <p class="error" *ngIf="mensajeError">{{ mensajeError }}</p>
+    <p class="ok" *ngIf="mensajeOk">{{ mensajeOk }}</p>
 
     <div *ngIf="productoEncontrado" class="resultado">
         <table mat-table [dataSource]="[productoEncontrado]" class="mini-table">

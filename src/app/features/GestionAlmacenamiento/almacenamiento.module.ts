@@ -12,6 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 
 // Componentes
 import { LotesRecibidosTableComponent } from './components/lotes-recibidos-table/lotes-recibidos-table.component';
@@ -65,6 +66,7 @@ import { ObservacionesAccionRegistrarComponent } from './components/observacione
     MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
+    MatRadioModule,
   ],
 })
 export class AlmacenamientoModule {}

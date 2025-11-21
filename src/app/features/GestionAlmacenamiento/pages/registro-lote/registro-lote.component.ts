@@ -95,18 +95,24 @@ export class RegistroLoteComponent implements OnInit {
     if (!event?.producto || !event.cantidad || event.cantidad <= 0) {
       return;
     }
-    const existente = this.productosDelLote.find(
+    const idx = this.productosDelLote.findIndex(
       (p) => p.producto.id_producto === event.producto.id_producto
     );
-    if (existente) {
-      existente.cantidad += event.cantidad; // acumula cantidad
+    if (idx >= 0) {
+      const updated = [...this.productosDelLote];
+      const item = updated[idx];
+      updated[idx] = { ...item, cantidad: item.cantidad + event.cantidad };
+      this.productosDelLote = updated; // reasigna referencia para forzar render
     } else {
-      this.productosDelLote.push({ producto: event.producto, cantidad: event.cantidad });
+      this.productosDelLote = [
+        ...this.productosDelLote,
+        { producto: event.producto, cantidad: event.cantidad },
+      ];
     }
   }
 
   handleEliminarProducto(index: number): void {
-    this.productosDelLote.splice(index, 1);
+    this.productosDelLote = this.productosDelLote.filter((_, i) => i !== index);
   }
 
   handleObservacionesChange(text: string): void {

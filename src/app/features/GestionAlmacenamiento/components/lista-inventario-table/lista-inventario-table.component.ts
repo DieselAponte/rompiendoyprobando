@@ -10,6 +10,7 @@ import { Inventario } from '../../models/inventario.model';
 export class ListaInventarioTableComponent {
   @Input() data: Inventario[] = [];
   @Output() selectedChange = new EventEmitter<Inventario | null>();
+  @Output() verReporte = new EventEmitter<Inventario>();
 
   displayedColumns: string[] = [
     'id_inventario',
@@ -20,7 +21,8 @@ export class ListaInventarioTableComponent {
     'stock_maximo',
     'ubicacion_especifica',
     'fecha_creacion',
-    'acciones',
+    'reporte', // Nuevo botón Ver Reporte Lote
+    'acciones', // Radio selección
   ];
 
   private selectedId: number | null = null;
@@ -37,5 +39,9 @@ export class ListaInventarioTableComponent {
       this.selectedId = row.id_inventario;
       this.selectedChange.emit(row);
     }
+  }
+
+  verReporteLote(row: Inventario) {
+    this.verReporte.emit(row);
   }
 }

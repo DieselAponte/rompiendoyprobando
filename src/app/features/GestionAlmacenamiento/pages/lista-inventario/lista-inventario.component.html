@@ -5,8 +5,8 @@
 
     <mat-card class="card-section">
         <h3>Inventario Registrado</h3>
-        <app-lista-inventario-table [data]="inventarioFiltrado"
-            (selectedChange)="onSelectionChange($event)"></app-lista-inventario-table>
+        <app-lista-inventario-table [data]="inventarioFiltrado" (selectedChange)="onSelectionChange($event)"
+            (verReporte)="verReporteLote($event)"></app-lista-inventario-table>
         <div class="acciones-inventario">
             <button mat-raised-button color="primary" (click)="registrarSalida()">
                 Registrar salida
