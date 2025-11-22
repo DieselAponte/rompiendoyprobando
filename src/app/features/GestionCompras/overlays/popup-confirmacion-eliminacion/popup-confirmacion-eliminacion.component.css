@@ -48,7 +48,7 @@
 
 /* Botón Cancelar (mat-button color="primary") */
 .mat-button[color="primary"] {
-    /* Usamos el color de tu diseño (o una versión más clara) */
+    /* Usamos el color de tu dis    eño (o una versión más clara) */
     background-color: #f0f0f0 !important;
     color: #1f3b73 !important; 
     border: 1px solid #ccc;

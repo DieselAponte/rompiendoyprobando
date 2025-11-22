@@ -30,7 +30,7 @@ export class ListaRequerimientosComponent implements OnInit {
         // Proveer a las tablas exactamente el shape que esperan
         this.programacionService.getRequerimientosPendientesTabla().subscribe(rows => this.requerimientosPendientesTabla = rows);
         this.programacionService.getRequerimientosAtendidosTabla().subscribe(rows => this.requerimientosAtendidosTabla = rows);
-    }
+    } 
 
     onAtenderRequerimiento(requerimiento: RequerimientoRow) {
         // Navegar a la vista de disponibilidad con el id_req

@@ -10,6 +10,7 @@ import { ProductoSolicitadoRow } from '../../services/programacion.service';
 export class ProductosSolicitadosTableComponent {
   @Input() data: ProductoSolicitadoRow[] = [];
   @Output() seleccionar = new EventEmitter<ProductoSolicitadoRow>();
-  displayedColumns: string[] = ['id_prod','nombre','cantidad','proveedor_seleccionado','accion'];
+  displayedColumns: string[] = ['id_prod',
+    'nombre','cantidad','distribuir'];
 }
 // Interface ahora proviene del servicio (ProductoSolicitadoRow)

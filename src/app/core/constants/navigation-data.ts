@@ -18,7 +18,7 @@ export const SIDEBAR_NAV_ITEMS: NavItem[] = [
     children: [
       { displayName: 'ASIGNACIÓN DE VEHICULOS', route: '/GestionDistribucion/asignacion' },
       { displayName: 'MONITOREO DE VEHICULOS', route: '/GestionDistribucion/monitoreo' },
-      { displayName: 'REPORTES DE ENTREGAS', route: '/GestionDistribucion/entregas' }
+      { displayName: 'REPORTES DE ENTREGAS', route: '/GestionDistribucion/reportes' }
     ]
   },
 

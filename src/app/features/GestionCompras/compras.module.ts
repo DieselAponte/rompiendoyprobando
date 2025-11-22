@@ -57,6 +57,7 @@ import { SolicitudesListComponent } from './pages/solicitudes-list/solicitudes-l
         ListaProveedoresComponent
     ],
     imports: [
+
         MatToolbarModule,
         MatCheckboxModule,
         MatCardModule,

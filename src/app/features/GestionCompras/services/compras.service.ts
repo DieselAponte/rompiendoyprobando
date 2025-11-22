@@ -54,7 +54,6 @@ export class ComprasService {
     // 1. Obtener la lista maestra del ProveedorService
     return this.proveedorService.getListadoProveedores().pipe(
         map((proveedoresMaestros) => {
-            console.log('[ComprasService] Procesando proveedores activos para cotización.');
             
             // 2. Filtrar solo proveedores Activos (estado: true)
             const proveedoresActivos = proveedoresMaestros.filter(p => p.estado === true);
