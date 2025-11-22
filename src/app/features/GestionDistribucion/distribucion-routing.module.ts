@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { ListaAsignacionComponent } from "./pages/lista-asignacion/lista-asignacion.component";
 import { ListaMonitoreoComponent } from "./pages/lista-monitoreo/lista-monitoreo.component";
 import { ListaEntregasComponent } from "./pages/lista-entregas/lista-entregas.component";
 
