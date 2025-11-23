@@ -1,24 +1,14 @@
 <div class="page-container">
-    <h2>Detalle de Requerimiento</h2>
+  <h2>Atender Requerimiento {{ reqIdActual }}</h2>
+  <app-detalle-requerimiento-atender-table
+    [data]="productos"
+    [(observaciones)]="observaciones"
+    (atender)="onAtender($event)"
+    (volver)="onVolver()"
+    (revisarStock)="onRevisarStock($event)"></app-detalle-requerimiento-atender-table>
 
-    <mat-card class="card-section">
-        <h3>Productos solicitados</h3>
-        <app-productos-solicitados-table [data]="productosSolicitadosTabla"
-            (seleccionar)="onSeleccionarProducto($event)">
-        </app-productos-solicitados-table>
-    </mat-card>
-
-    <div class="buttons">
-        <button mat-stroked-button color="primary" (click)="volver()">Volver</button>
-        <button mat-stroked-button color="primary" (click)="rechazar()">Rechazar requerimiento</button>
-        <button mat-raised-button color="primary" (click)="Aceptar()" [disabled]="!puedeAceptarActual">
-            Programar requerimiento
-        </button>
-    </div>
-
-    <!-- Popup proveedores disponibles -->
-    <app-popup-proveedores-disponibles *ngIf="mostrarPopupProveedores" [data]="proveedoresDisponibles"
-        (seleccionarProveedor)="onProveedorSeleccionado($event)" (close)="cerrarPopupProveedores()">
-    </app-popup-proveedores-disponibles>
-
+  <app-popup-revisar-stock-producto *ngIf="mostrarPopupStock"
+    [nombreProducto]="nombreProductoSeleccionado"
+    [lotes]="lotesProducto"
+    (close)="cerrarPopupStock()"></app-popup-revisar-stock-producto>
 </div>

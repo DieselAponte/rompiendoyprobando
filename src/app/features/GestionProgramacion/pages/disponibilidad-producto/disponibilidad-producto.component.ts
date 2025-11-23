@@ -1,99 +1,74 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {ProgramacionService, RequerimientoPendiente, ProductoSolicitadoRow, PuntoVentaProductoRow} from '../../services/programacion.service';
+import { ProgramacionService } from '../../services/programacion.service';
+import { Producto } from '../../models/producto.model';
+import { DetalleRequerimientoAtenderTableComponent } from '../../components/detalle-requerimiento-atender/detalle-requerimiento-atender-table.component';
+import { PopupRevisarStockProductoComponent } from '../../overlays/popup-revisar-stock-producto/popup-revisar-stock-producto.component';
+import { LoteProducto } from '../../models/lotes_producto.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-disponibilidad-producto',
     templateUrl: './disponibilidad-producto.component.html',
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, DetalleRequerimientoAtenderTableComponent, PopupRevisarStockProductoComponent],
     styleUrls: ['./disponibilidad-producto.component.css']
 })
 
 export class DisponibilidadProductoComponent implements OnInit {
-    // Requerimiento seleccionado (id)
     reqIdActual: string | null = null;
-
-    // Tabla de productos solicitados para el requerimiento actual
-    productosSolicitadosTabla: ProductoSolicitadoRow[] = [];
-
-    // Habilitar botón Aceptar cuando todos los productos tengan proveedor
-    puedeAceptarActual = false;
-
-    // Popup proveedores
-    mostrarPopupProveedores = false;
-    proveedoresDisponibles: PuntoVentaProductoRow[] = [];
-    productoSeleccionado: ProductoSolicitadoRow | null = null;
+    productos: (Producto & { decision?: 'COMPRAS' | 'DISTRIBUCION' })[] = [];
+    observaciones = '';
+    mostrarPopupStock = false;
+    lotesProducto: LoteProducto[] = [];
+    nombreProductoSeleccionado = '';
 
     constructor(private programacionService: ProgramacionService, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-        // Intentar obtener el id desde la ruta
         const idFromRoute = this.route.snapshot.paramMap.get('id');
         if (idFromRoute) {
             this.reqIdActual = idFromRoute;
-            this.cargarProductos(idFromRoute);
-            this.suscribirPuedeAceptar(idFromRoute);
-            return;
+            this.programacionService.loadProductosParaAtender(idFromRoute);
+        } else {
+            // fallback: primer requerimiento pendiente
+            this.programacionService.getRequerimientosPendientesTabla().subscribe(p => {
+                if (p.length) {
+                    this.reqIdActual = p[0].id_req;
+                    this.programacionService.loadProductosParaAtender(this.reqIdActual);
+                }
+            });
         }
-        // Fallback: tomar el primero pendiente si no hay parámetro
-        this.programacionService.getDisponibilidadProducto().subscribe((pendientes: RequerimientoPendiente[]) => {
-            if (!this.reqIdActual && pendientes.length) {
-                this.reqIdActual = pendientes[0].id_req;
-                this.cargarProductos(this.reqIdActual);
-                this.suscribirPuedeAceptar(this.reqIdActual);
-            }
+        this.programacionService.getProductosParaAtender().subscribe(lista => {
+            // preservar decisiones existentes si recarga
+            this.productos = lista.map(m => {
+                const prev = this.productos.find(x => x.id_producto === m.id_producto);
+                return { ...m, decision: prev?.decision };
+            });
         });
     }
 
-    private cargarProductos(idReq: string) {
-        this.programacionService.getProductosSolicitadosTabla(idReq).subscribe(rows => this.productosSolicitadosTabla = rows);
-    }
-
-    private suscribirPuedeAceptar(idReq: string) {
-        this.programacionService.puedeAceptar(idReq).subscribe(flag => this.puedeAceptarActual = flag);
-    }
-
-    volver() {
+    onAtender(payload: { productos: (Producto & { decision?: 'COMPRAS' | 'DISTRIBUCION' })[]; observaciones: string }) {
+        if (this.reqIdActual) {
+            // Aquí podríamos persistir decisiones antes de aceptar
+            this.programacionService.aceptarRequerimiento(this.reqIdActual);
+        }
         history.back();
     }
 
-    rechazar() {
-        if (this.reqIdActual) {
-            this.programacionService.cancelarRequerimiento(this.reqIdActual);
-        }
-        this.volver();
-    }
+    onVolver() { history.back(); }
 
-    Aceptar() {
-        if (this.reqIdActual) {
-            this.programacionService.aceptarRequerimiento(this.reqIdActual);
-        }
-        this.volver();
-    }
-
-    // --- Interacciones de selección de proveedor ---
-    onSeleccionarProducto(prod: ProductoSolicitadoRow) {
-        if (!this.reqIdActual) return;
-        this.productoSeleccionado = prod;
-        this.programacionService.getProveedoresDisponiblesTabla(prod.id_prod).subscribe(data => {
-            this.proveedoresDisponibles = data;
-            this.mostrarPopupProveedores = true;
+    onRevisarStock(producto: Producto) {
+        this.nombreProductoSeleccionado = producto.nombre_producto;
+        this.programacionService.getLotesByProducto(producto.id_producto).subscribe(l => {
+            this.lotesProducto = l;
+            this.mostrarPopupStock = true;
         });
     }
 
-    onProveedorSeleccionado(pv: PuntoVentaProductoRow) {
-        if (!this.reqIdActual || !this.productoSeleccionado) return;
-        this.programacionService.seleccionarProveedorParaProducto(this.reqIdActual, this.productoSeleccionado.id_prod, pv.id_puntoVenta);
-        // Refrescar tabla y estado de aceptación
-        this.cargarProductos(this.reqIdActual);
-        this.suscribirPuedeAceptar(this.reqIdActual);
-        // Cerrar popup
-        this.cerrarPopupProveedores();
-    }
-
-    cerrarPopupProveedores() {
-        this.mostrarPopupProveedores = false;
-        this.productoSeleccionado = null;
-        this.proveedoresDisponibles = [];
+    cerrarPopupStock() {
+        this.mostrarPopupStock = false;
+        this.lotesProducto = [];
+        this.nombreProductoSeleccionado = '';
     }
 }

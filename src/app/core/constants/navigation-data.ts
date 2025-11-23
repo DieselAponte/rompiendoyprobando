@@ -7,7 +7,7 @@ export const SIDEBAR_NAV_ITEMS: NavItem[] = [
     requiredRole: 'supervisor_prog', 
     children: [
       { displayName: 'REQ. NO ATENDIDOS', route: '/GestionProgramacion/lista-requerimiento' },
-      { displayName: 'REQ. ATENDIDOS', route: '/GestionProgramacion/disponibilidad-producto' }
+      { displayName: 'REQ. ATENDIDOS', route: '/GestionProgramacion/lista-requerimientos-atendidos' }
     ]
   },
 

@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
+import { DetalleRequerimiento } from '../models/detalle_requerimiento';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LoteProducto } from '../models/lotes_producto.model';
+import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { DetalleOrdenDistribucion } from '../models/detalle_ordenDistribucion';
+import { DetalleSolicitud } from '../models/detalle_solicitud';
+import { Producto } from '../models/producto.model';
 // Entidades de dominio
 export interface Requerimiento {
   id_req: string;
@@ -93,7 +98,169 @@ export class ProgramacionService {
     },
   ]);
 
+    // -------- Productos para atender requerimiento (vista detalle-requerimiento-atender) --------
+    private productosAtenderSubject = new BehaviorSubject<Producto[]>([]);
+
+    // Mock lotes por producto para popup revisar stock
+    private lotesMock: LoteProducto[] = [
+      {
+        id_lote: 'L001', id_producto: 'P001', numero_lote: 'NL-001',
+        fecha_fabricacion: '01/09/2024', fecha_vencimiento: '01/09/2025', cantidad_actual: 120,
+        ubicacion_almacen: 'Almacén Central A1', temperatura_almacenamiento: '4C', fecha_creacion: '02/09/2024'
+      },
+      {
+        id_lote: 'L002', id_producto: 'P001', numero_lote: 'NL-002',
+        fecha_fabricacion: '15/09/2024', fecha_vencimiento: '15/09/2025', cantidad_actual: 60,
+        ubicacion_almacen: 'Almacén Secundario B3', temperatura_almacenamiento: '4C', fecha_creacion: '16/09/2024'
+      },
+      {
+        id_lote: 'L010', id_producto: 'P002', numero_lote: 'PAR-10',
+        fecha_fabricacion: '05/08/2024', fecha_vencimiento: '05/08/2026', cantidad_actual: 200,
+        ubicacion_almacen: 'Almacén Central C2', temperatura_almacenamiento: 'Ambiente', fecha_creacion: '06/08/2024'
+      },
+      {
+        id_lote: 'L020', id_producto: 'P003', numero_lote: 'IBU-20',
+        fecha_fabricacion: '21/07/2024', fecha_vencimiento: '21/07/2026', cantidad_actual: 40,
+        ubicacion_almacen: 'Almacén Frío D5', temperatura_almacenamiento: '2C', fecha_creacion: '22/07/2024'
+      }
+    ];
+
+    loadProductosParaAtender(idReq: string) {
+      const req = this.requerimientosSubject.value.find(r => r.id_req === idReq);
+      if (!req) {
+        this.productosAtenderSubject.next([]);
+        return;
+      }
+      // Mapear productos requeridos a modelo Producto con datos mock adicionales
+      const mapped: Producto[] = req.productos.map(p => ({
+        id_producto: p.id_producto,
+        nombre_producto: p.nombre,
+        descripcion_producto: `Descripción de ${p.nombre}`,
+        cantidadsolicitada: p.cantidad,
+        codigo_digemid: 'DIG-' + p.id_producto,
+        registro_sanitario: 'REG-' + p.id_producto,
+        id_tipo: 'TIPO1',
+        id_forma: 'FORMA1',
+        estado: 'pendiente'
+      }));
+      this.productosAtenderSubject.next(mapped);
+    }
+
+    getProductosParaAtender(): Observable<Producto[]> {
+      return this.productosAtenderSubject.asObservable();
+    }
+
+    getLotesByProducto(idProducto: string): Observable<LoteProducto[]> {
+      return of(this.lotesMock.filter(l => l.id_producto === idProducto));
+    }
+
   readonly requerimientos$ = this.requerimientosSubject.asObservable();
+
+  // Mock DetalleRequerimientos (pendientes) para la nueva tabla basada en DetalleRequerimiento
+  private readonly detallePendientesSubject = new BehaviorSubject<DetalleRequerimiento[]>([
+    {
+      id_requerimiento: 'REQ01',
+      id_producto: 'P001',
+      cantidad: 150,
+      observacion: 'Urgente para distribución',
+      fecha_creacion: '20/10/2024',
+      fecha_actual: '21/10/2024'
+    },
+    {
+      id_requerimiento: 'REQ01',
+      id_producto: 'P002',
+      cantidad: 80,
+      observacion: 'Validar stock en PV',
+      fecha_creacion: '20/10/2024',
+      fecha_actual: '21/10/2024'
+    },
+    {
+      id_requerimiento: 'REQ03',
+      id_producto: 'P005',
+      cantidad: 40,
+      observacion: 'Nuevo requerimiento',
+      fecha_creacion: '23/10/2024',
+      fecha_actual: '23/10/2024'
+    }
+  ]);
+
+  getDetalleRequerimientosPendientes(): Observable<DetalleRequerimiento[]> {
+    return this.detallePendientesSubject.asObservable();
+  }
+
+  // ---------------- Orden Distribución & Solicitud Compra (Atendidos) ----------------
+  private readonly ordenDistribucionSubject = new BehaviorSubject<DetalleOrdenDistribucion[]>([
+    {
+      id_orden_dist: 'OD001',
+      id_lote: 'L001',
+      id_producto: 'P001',
+      cantidad: 120,
+      condiciones_transporte: 'Frío',
+      temperatura_requerida: '4C',
+      observaciones: 'Revisar embalaje',
+      fecha_creacion: '18/10/2024'
+    },
+    {
+      id_orden_dist: 'OD001',
+      id_lote: 'L002',
+      id_producto: 'P002',
+      cantidad: 60,
+      condiciones_transporte: 'Seco',
+      temperatura_requerida: 'Ambiente',
+      observaciones: 'Urgente',
+      fecha_creacion: '18/10/2024'
+    },
+    {
+      id_orden_dist: 'OD002',
+      id_lote: 'L003',
+      id_producto: 'P003',
+      cantidad: 40,
+      condiciones_transporte: 'Frío',
+      temperatura_requerida: '2C',
+      observaciones: 'Sensibles',
+      fecha_creacion: '19/10/2024'
+    }
+  ]);
+
+  private readonly solicitudCompraSubject = new BehaviorSubject<DetalleSolicitud[]>([
+    {
+      id_solicitud: 'SC001',
+      id_producto: 'P010',
+      cantidad: 300,
+      observacion: 'Nuevo stock',
+      fecha_creacion: '20/10/2024',
+      fecha_actual: '21/10/2024'
+    },
+    {
+      id_solicitud: 'SC001',
+      id_producto: 'P011',
+      cantidad: 150,
+      observacion: 'Reponer baja rotación',
+      fecha_creacion: '20/10/2024',
+      fecha_actual: '21/10/2024'
+    },
+    {
+      id_solicitud: 'SC002',
+      id_producto: 'P012',
+      cantidad: 50,
+      observacion: 'Prueba piloto',
+      fecha_creacion: '22/10/2024',
+      fecha_actual: '22/10/2024'
+    }
+  ]);
+
+  getOrdenDistribucion(): Observable<DetalleOrdenDistribucion[]> {
+    return this.ordenDistribucionSubject.asObservable();
+  }
+  getSolicitudCompra(): Observable<DetalleSolicitud[]> {
+    return this.solicitudCompraSubject.asObservable();
+  }
+  getOrdenDistribucionById(id: string): DetalleOrdenDistribucion[] {
+    return this.ordenDistribucionSubject.value.filter(o => o.id_orden_dist === id);
+  }
+  getSolicitudCompraById(id: string): DetalleSolicitud[] {
+    return this.solicitudCompraSubject.value.filter(s => s.id_solicitud === id);
+  }
 
   // Accesores base
   getRequerimientos(): Requerimiento[] {

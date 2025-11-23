@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RequerimientoRow } from '../../services/programacion.service';
+import { Component, Input } from '@angular/core';
+import { DetalleRequerimiento } from '../../models/detalle_requerimiento';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-requerimientos-pendientes-table',
@@ -8,18 +9,22 @@ import { RequerimientoRow } from '../../services/programacion.service';
   styleUrls: ['./requerimientos-pendientes-table.component.css']
 })
 export class RequerimientosPendientesTableComponent {
-  // Usa el DTO unificado desde el servicio
-  @Input() data: RequerimientoRow[] = [];
-  @Output() atender = new EventEmitter<RequerimientoRow>();
+  @Input() data: DetalleRequerimiento[] = [];
 
   displayedColumns: string[] = [
-    'id_req',
-    'id_usr',
-    'id_dep',
-    'fecha_emision',
-    'descripcion',
-    'prioridad',
-    'estado',
+    'id_requerimiento',
+    'id_producto',
+    'cantidad',
+    'observacion',
+    'fecha_creacion',
+    'fecha_actual',
     'accion'
   ];
+
+  constructor(private router: Router) {}
+
+  atender(row: DetalleRequerimiento) {
+    // Navega a disponibilidad-producto pasando id del requerimiento
+    this.router.navigate(['/GestionProgramacion/disponibilidad-producto/', row.id_requerimiento]);
+  }
 }
