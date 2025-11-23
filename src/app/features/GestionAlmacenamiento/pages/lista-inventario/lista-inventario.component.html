@@ -1,14 +1,18 @@
 <div class="page-container">
-    <h2>Ver inventario</h2>
+    <h2>Ver Inventario</h2>
+
+    <app-search-bar (termChange)="onSearchTerm($event)" [noMatches]="noMatches"></app-search-bar>
 
     <mat-card class="card-section">
-        <h3>Lotes Almacenados</h3>
-        <app-lista-inventario-table [data]="lotesAlmacenados">
-        </app-lista-inventario-table>
+        <h3>Inventario Registrado</h3>
+        <app-lista-inventario-table [data]="inventarioFiltrado" (selectedChange)="onSelectionChange($event)"
+            (verReporte)="verReporteLote($event)"></app-lista-inventario-table>
+        <div class="acciones-inventario">
+            <button mat-raised-button color="primary" (click)="registrarSalida()">
+                Registrar salida
+            </button>
+        </div>
     </mat-card>
 
-    <!-- Popup reporte de lote
-    <app-popup-reporte-lote *ngIf="reporteSeleccionado" [reporte]="reporteSeleccionado" (close)="cerrarPopup()"
-        (resolverIncidencia)="handleResolverIncidencia($event)">
-    </app-popup-reporte-lote> -->
+    <!-- Espacio para futuros popups de detalle/movimiento -->
 </div>

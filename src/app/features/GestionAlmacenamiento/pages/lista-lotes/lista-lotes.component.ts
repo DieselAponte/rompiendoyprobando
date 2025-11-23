@@ -1,34 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { AlmacenamientoService, LoteRecibido, LoteAtendido } from '../../services/almacenamiento.service';
+import { AlmacenamientoService } from '../../services/almacenamiento.service';
+import { LotesProducto } from '../../models/lotes_producto.model';
+import { Inventario } from '../../models/inventario.model';
+import { MovimientoInventario } from '../../models/movimiento_inventario.model';
 
 @Component({
   selector: 'app-lista-lotes',
   templateUrl: './lista-lotes.component.html',
   standalone: false,
-  styleUrls: ['./lista-lotes.component.css']
+  styleUrls: ['./lista-lotes.component.css'],
 })
-  
 export class ListaLotesComponent implements OnInit {
-  lotesRecibidos: LoteRecibido[] = [];
-  lotesAtendidos: LoteAtendido[] = [];
+  lotesRecibidos: LotesProducto[] = [];
+  lotesAtendidos: Inventario[] = [];
 
-  reporteSeleccionado: LoteAtendido | null = null;
+  reporteSeleccionado: MovimientoInventario | null = null;
 
   constructor(private almacenamientoService: AlmacenamientoService) {}
 
   ngOnInit(): void {
-    this.almacenamientoService.getLotesRecibidos().subscribe(data => this.lotesRecibidos = data);
-    this.almacenamientoService.getLotesAtendidos().subscribe(data => this.lotesAtendidos = data);
+    this.almacenamientoService.getLotesProducto().subscribe((data) => (this.lotesRecibidos = data));
+    this.almacenamientoService
+      .getLotesAtendidos()
+      .subscribe((data) => (this.lotesAtendidos = data));
   }
 
-  onRegistrarLote(lote: LoteRecibido) {
+  onRegistrarLote(lote: LotesProducto) {
     console.log('Registrar lote:', lote);
   }
 
-  onVerReporte(lote: LoteAtendido) {
-    // abrir popup con el reporte seleccionado
-    console.log('Ver reporte del lote:', lote);
-    this.reporteSeleccionado = lote;
+  onVerReporte(item: Inventario) {
+    // Buscar el movimiento asociado al inventario seleccionado
+    this.almacenamientoService.getMovimientosInventario().subscribe((movimientos) => {
+      const movimiento = movimientos.find((m) => m.id_inventario === item.id_inventario);
+      if (movimiento) {
+        this.reporteSeleccionado = movimiento;
+      } else {
+        console.warn('No se encontró movimiento para el inventario:', item.id_inventario);
+      }
+    });
   }
 
   cerrarPopup() {

@@ -10,6 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 
 // Componentes
 import { LotesRecibidosTableComponent } from './components/lotes-recibidos-table/lotes-recibidos-table.component';
@@ -17,14 +20,20 @@ import { LotesAtendidosTableComponent } from './components/lotes-atendidos-table
 
 //Overlays
 import { PopupRegistroIncidenciaComponent } from './overlays/popup-registro-incidencia/popup-registro-incidencia.component';
-import {PopupReporteLoteComponent} from './overlays/popup-reporte-lote/popup-reporte-lote.component';
+import { PopupReporteLoteComponent } from './overlays/popup-reporte-lote/popup-reporte-lote.component';
 
 //Pages
-import {ListaInventarioComponent} from './pages/lista-inventario/lista-inventario.component';
+import { ListaInventarioComponent } from './pages/lista-inventario/lista-inventario.component';
 import { ListaLotesComponent } from './pages/lista-lotes/lista-lotes.component';
 import { RegistroLoteComponent } from './pages/registro-lote/registro-lote.component';
 import { ListaInventarioTableComponent } from './components/lista-inventario-table/lista-inventario-table.component';
-
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { RegistroSalidaComponent } from './pages/registro-salida/registro-salida.component';
+import { SearchInfoDespachoComponent } from './components/search-info-despacho/search-info-despacho.component';
+import { ObservacionesAccionComponent } from './components/observaciones-accion/observaciones-accion.component';
+import { SearchInfoDigemidComponent } from './components/search-info-digemid/search-info-digemid.component';
+import { ProdPerteneceLoteComponent } from './components/prod-pertenece-lote/prod-pertenece-lote.component';
+import { ObservacionesAccionRegistrarComponent } from './components/observaciones-accion-registrar/observaciones-accion-registrar.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +44,14 @@ import { ListaInventarioTableComponent } from './components/lista-inventario-tab
     ListaInventarioComponent,
     PopupRegistroIncidenciaComponent,
     PopupReporteLoteComponent,
-    RegistroLoteComponent
+    RegistroLoteComponent,
+    SearchBarComponent,
+    RegistroSalidaComponent,
+    SearchInfoDespachoComponent,
+    ObservacionesAccionComponent,
+    SearchInfoDigemidComponent,
+    ProdPerteneceLoteComponent,
+    ObservacionesAccionRegistrarComponent,
   ],
   imports: [
     CommonModule,
@@ -47,7 +63,10 @@ import { ListaInventarioTableComponent } from './components/lista-inventario-tab
     MatCardModule,
     MatIconModule,
     MatDividerModule,
-    MatTooltipModule
-  ]
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+  ],
 })
 export class AlmacenamientoModule {}
