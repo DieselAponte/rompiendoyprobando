@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
 import { LoteProductoDto } from '../../models/LoteProductoDto';
-import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
+import { ProductoResumenDto } from '../../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-registro-lote',

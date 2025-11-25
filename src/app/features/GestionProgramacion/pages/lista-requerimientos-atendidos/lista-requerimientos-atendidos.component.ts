@@ -58,12 +58,12 @@ export class ListaRequerimientosAtendidosComponent implements OnInit {
   }
 
   openDistribucion(id: number) {
-    this.distribucionDetalle = this.programacionService.getOrdenDistribucionById(String(id));
+    this.distribucionDetalle = this.programacionService.getOrdenDistribucionById(Number(id));
     this.showPopupDistribucion = true;
   }
 
   openSolicitud(id: number) {
-    this.solicitudDetalle = this.programacionService.getSolicitudCompraById(String(id));
+    this.solicitudDetalle = this.programacionService.getSolicitudCompraById(Number(id));
     this.showPopupSolicitud = true;
   }
 }

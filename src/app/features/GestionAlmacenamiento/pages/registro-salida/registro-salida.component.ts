@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
+import { ProductoResumenDto } from '../../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-registro-salida',

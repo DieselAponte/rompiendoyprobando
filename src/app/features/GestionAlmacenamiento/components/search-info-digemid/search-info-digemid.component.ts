@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
-import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
+import { ProductoResumenDto } from '../../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-search-info-digemid',

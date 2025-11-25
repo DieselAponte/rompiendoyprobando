@@ -88,7 +88,7 @@ export class ProgramacionService {
 		return of([]);
 	}
 
-	getOrdenDistribucionById(_id: string): DetalleOrdenDistribucionDto[] {
+	getOrdenDistribucionById(_id: number): DetalleOrdenDistribucionDto[] {
 		return [];
 	}
 
@@ -96,11 +96,11 @@ export class ProgramacionService {
 		return of([]);
 	}
 
-	getSolicitudCompraById(_id: string): DetalleSolicitudCompraDto[] {
+	getSolicitudCompraById(_id: number): DetalleSolicitudCompraDto[] {
 		return [];
 	}
 
-	aceptarRequerimiento(_idReq: string): void {
+	aceptarRequerimiento(_idReq: number): void {
 		console.warn('aceptarRequerimiento aún no está implementado contra el backend.');
 	}
 }

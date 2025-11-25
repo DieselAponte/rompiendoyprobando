@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
+import { ProductoResumenDto } from '../../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-prod-pertenece-lote',
