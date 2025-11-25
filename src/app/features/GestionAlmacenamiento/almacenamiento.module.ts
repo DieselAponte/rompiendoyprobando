@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { HttpClientModule } from '@angular/common/http';
 
 // Componentes
 import { LotesRecibidosTableComponent } from './components/lotes-recibidos-table/lotes-recibidos-table.component';
@@ -37,6 +38,7 @@ import { ObservacionesAccionRegistrarComponent } from './components/observacione
 
 @NgModule({
   declarations: [
+    
     ListaLotesComponent,
     LotesRecibidosTableComponent,
     LotesAtendidosTableComponent,
@@ -54,6 +56,8 @@ import { ObservacionesAccionRegistrarComponent } from './components/observacione
     ObservacionesAccionRegistrarComponent,
   ],
   imports: [
+    
+    HttpClientModule,
     CommonModule,
     AlmacenamientoRoutingModule,
     FormsModule,
