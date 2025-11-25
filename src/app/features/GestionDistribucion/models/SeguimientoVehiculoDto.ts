@@ -8,10 +8,10 @@ export interface SeguimientoVehiculoDto {
 	proximoDestino: string;
 	estimadoLlegada?: string;
 	/** Legacy fields usados por la UI mientras se completa la migración */
-	idSeguimiento?: number;
-	idOrden?: number;
-	idVehiculoLegacy?: number;
-	placaVehiculo?: string;
+	idSeguimiento: number;
+	idOrden: number;
+	idVehiculoLegacy: number;
+	placaVehiculo: string;
 }
 
 export interface VehiculoResumenDto {

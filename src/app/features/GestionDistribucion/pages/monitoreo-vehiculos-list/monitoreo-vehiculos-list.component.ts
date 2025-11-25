@@ -158,7 +158,7 @@ export class MonitoreoVehiculosListComponent implements OnInit{
                 
                 // 4. Construir la data para el diálogo
                 const data: IncidenciaDialogData = {
-                    idVehiculo: seguimiento.idVehiculo,
+                    idVehiculo: seguimiento.idVehiculo.id,
                     idOrdenDist: idOrden,
                     idUsuarioReporta: 1, // Mock ID
                     idDetalleDist: null, 

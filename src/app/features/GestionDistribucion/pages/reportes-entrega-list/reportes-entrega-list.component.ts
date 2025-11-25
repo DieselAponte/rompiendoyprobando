@@ -54,9 +54,9 @@ export class ReportesEntregaListComponent implements OnInit {
     }
     const filtro = this.filtroBusqueda.toLowerCase();
     return this.ordenesEntregadas.filter(o => 
-      o.idOrden.toString().includes(filtro) ||
-      o.nombreUsuario.toLowerCase().includes(filtro) ||
-      o.area.toLowerCase().includes(filtro)
+      o.idOrden?.toString().includes(filtro) ||
+      o.nombreUsuario?.toLowerCase().includes(filtro) ||
+      o.area?.toLowerCase().includes(filtro)
     );
   }
 
