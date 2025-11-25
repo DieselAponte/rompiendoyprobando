@@ -31,8 +31,8 @@
     <ng-container matColumnDef="idLoteAfectado">
       <th mat-header-cell *matHeaderCellDef> Lote Afectado </th>
       <td mat-cell *matCellDef="let element"> 
-        {{element.idDetalleDist || 'General'}} 
-        <span *ngIf="!element.idDetalleDist" class="text-xs text-gray-500">(Vehículo/Orden)</span>
+        {{element.idDetalleDist ?? 'General'}} 
+        <span *ngIf="element.idDetalleDist === null || element.idDetalleDist === undefined" class="text-xs text-gray-500">(Vehículo/Orden)</span>
       </td>
     </ng-container>
     

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { DetalleOrdenDistribucion } from '../../models/detalleOrdenDistribucion.model';
-import { Vehiculo } from '../../models/vehiculo.model';
+import { DetalleOrdenDistribucion } from '../../models/DetalleOrdenDistribucionAsignacion.model';
+import { Vehiculo } from '../../models/VehiculoDto';
 
 
 @Component({
@@ -37,7 +37,10 @@ export class AsignacionLoteVehiculoTableComponent {
    * Formatea la opción del vehículo para mostrar la capacidad y el tipo.
    */
   getVehiculoLabel(vehiculo: Vehiculo): string {
-    return `#${vehiculo.idVehiculo} | Cap: ${vehiculo.capacidad} | Tipo: ${vehiculo.tipoVehiculo}`;
+    const id = vehiculo.idVehiculo ?? vehiculo.id;
+    const capacidad = vehiculo.capacidad ?? 'N/D';
+    const tipo = vehiculo.tipoVehiculo ?? 'Sin tipo';
+    return `#${id} | Cap: ${capacidad} | Tipo: ${tipo}`;
   }
 
   

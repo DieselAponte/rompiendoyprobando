@@ -3,9 +3,9 @@ import { Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs';
 
-import { DetalleOrdenDistribucion } from '../../models/detalleOrdenDistribucion.model';
+import { DetalleOrdenDistribucion } from '../../models/DetalleOrdenDistribucionAsignacion.model';
 import { SelectorVehiculoDialogData, SelectorVehiculoDialogResult } from '../../models/vehiculoDialog.model';
-import { Vehiculo } from '../../models/vehiculo.model';
+import { Vehiculo } from '../../models/VehiculoDto';
 import { DistribucionService } from '../../services/distribucion.service';
 
 

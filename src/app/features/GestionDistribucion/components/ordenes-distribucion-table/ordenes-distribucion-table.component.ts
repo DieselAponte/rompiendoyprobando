@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { OrdenDistribucion } from '../../models/ordenDistribucion.model';
+import { OrdenDistribucion } from '../../models/OrdenDistribucionDto';
 
 @Component({
   selector: 'app-ordenes-distribucion-table',

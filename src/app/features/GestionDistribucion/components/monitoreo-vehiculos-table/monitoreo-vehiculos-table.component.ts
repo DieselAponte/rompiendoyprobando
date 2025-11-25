@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
-import { SeguimientoVehiculo } from '../../models/seguimientoVehiculo.model';
+import { SeguimientoVehiculo } from '../../models/SeguimientoVehiculoDto';
 import { EventEmitter } from '@angular/core';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { Vehiculo } from '../../models/vehiculo.model';
+import { Vehiculo } from '../../models/VehiculoDto';
 import { DistribucionService } from '../../services/distribucion.service';
 import { InfoVehiculoDialogData } from '../../models/vehiculoDialog.model';
 import { finalize } from 'rxjs';

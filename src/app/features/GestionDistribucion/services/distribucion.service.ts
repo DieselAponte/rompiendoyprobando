@@ -1,68 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { map } from 'rxjs';
-import { DetalleOrdenDistribucion } from '../models/detalleOrdenDistribucion.model';
-import { OrdenDistribucion } from '../models/ordenDistribucion.model';
-import { Vehiculo } from '../models/vehiculo.model';
-import { SeguimientoVehiculo } from '../models/seguimientoVehiculo.model';
-import { DetalleTransporte } from '../models/detalleTransporte.model';
-import { LoteProducto } from '../models/loteProducto.model';
+import { forkJoin, map, Observable, of, throwError, switchMap } from 'rxjs';
+import { DistribucionApiService } from '../api/distribucion-api.service';
+import { DetalleOrdenDistribucion } from '../models/DetalleOrdenDistribucionAsignacion.model';
+import { DetalleOrdenDistribucionDto } from '../models/DetalleOrdenDistribucionDto';
+import { DetalleTransporteDto } from '../models/DetalleTransporteDto';
+import { IncidenciaTransporteDto } from '../models/IncidenciaTransporteDto';
+import { OrdenDistribucion, OrdenDistribucionDto } from '../models/OrdenDistribucionDto';
+import { SeguimientoVehiculo, SeguimientoVehiculoDto } from '../models/SeguimientoVehiculoDto';
+import { Vehiculo, VehiculoDto } from '../models/VehiculoDto';
+import { LoteProducto } from '../models/lote-producto-info.model';
 import { DetalleOrdenCompleta } from '../models/incidenciasModels/detalleReporteCompleto.model';
 import { IncidenciaReporte } from '../models/incidenciasModels/incidenciaReporte.model';
-import { IncidenciaTransporteCreatePayload } from '../models/crearIncidencia.model';
 import { OrdenReporte } from '../models/incidenciasModels/ordenReporte.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DistribucionService {
-  constructor() { }
+  private readonly estadosDefaultConsulta = ['PENDIENTE', 'PROGRAMADA', 'EN_RUTA'];
 
-  private mockOrdenes: OrdenDistribucion[] = [
-    { idOrden: 201, idRequerimiento: 305, nombreUsuario: 'Carlos A.', area: 'Farmacia', estado: 'Pendiente', prioridad: 'Alta', fechaEntregaEstimada: '2025-12-01' },
-    { idOrden: 202, idRequerimiento: 306, nombreUsuario: 'Laura V.', area: 'Almacén', estado: 'En ruta', prioridad: 'Media', fechaEntregaEstimada: '2025-12-05' },
-    { idOrden: 203, idRequerimiento: 307, nombreUsuario: 'Ana M.', area: 'Laboratorio', estado: 'Entregada', prioridad: 'Baja', fechaEntregaEstimada: '2025-11-15' }, // Entregada con incidencias
-    { idOrden: 204, idRequerimiento: 308, nombreUsuario: 'Javier P.', area: 'Farmacia', estado: 'Entregada', prioridad: 'Media', fechaEntregaEstimada: '2025-11-16' },
-  ];
-  
-  private mockVehiculos: Vehiculo[] = [
-      { idVehiculo: 1, placa: 'ABC-123', capacidad: 5, tipoVehiculo: 'Furgón', condicionTransporte: 'Ambiente', disponible: true },
-      { idVehiculo: 2, placa: 'DEF-456', capacidad: 2, tipoVehiculo: 'Camioneta', condicionTransporte: 'Ambiente', disponible: false },
-      { idVehiculo: 3, placa: 'GHI-789', capacidad: 3, tipoVehiculo: 'Furgón', condicionTransporte: 'Frío', disponible: true },
-  ];
-
-  
-  private mockIncidencias: IncidenciaReporte[] = [
-      // Incidencias para la Orden 203
-      { idIncidencia: 1, idOrden: 203, idVehiculo: 1, idDetalleDist: null, tipoIncidencia: 'Tráfico', descripcion: 'Tráfico pesado no previsto.', impacto: 'Moderado', fechaReporte: '2025-11-15T10:00:00', usuarioReporta: 'Conductor A' },
-      { idIncidencia: 2, idOrden: 203, idVehiculo: 1, idDetalleDist: 501, tipoIncidencia: 'Problema de Carga/Descarga', descripcion: 'El empaque del Lote 501 se dañó levemente.', impacto: 'Bajo', fechaReporte: '2025-11-15T14:30:00', usuarioReporta: 'Auxiliar Z' },
-  ];
-
-
-  private mockSeguimientos: SeguimientoVehiculo[] = [
-    { idSeguimiento: 1, idOrden: 201, idVehiculo: 1, placaVehiculo: 'ABC-123', estadoActual: 'En Ruta', ubicacionActual: 'Km 50, Carretera Norte', fechaHoraActualizacion: new Date(), proximoDestino: 'Hospital Central', estimadoLlegada: '2025-11-20T16:00:00' },
-    { idSeguimiento: 2, idOrden: 202, idVehiculo: 3, placaVehiculo: 'GHI-789', estadoActual: 'Retrasado', ubicacionActual: 'Almacén Principal', fechaHoraActualizacion: new Date(), proximoDestino: 'Clínica Este', estimadoLlegada: '2025-11-20T18:30:00' },
-    { idSeguimiento: 3, idOrden: 203, idVehiculo: 1, placaVehiculo: 'ABC-123', estadoActual: 'Entregada', ubicacionActual: 'Hospital Central', fechaHoraActualizacion: '2025-11-15T15:00:00', proximoDestino: 'N/A', estimadoLlegada: '2025-11-15T15:00:00' },
-    { idSeguimiento: 4, idOrden: 204, idVehiculo: 2, placaVehiculo: 'DEF-456', estadoActual: 'Entregada', ubicacionActual: 'Cliente Final', fechaHoraActualizacion: '2025-11-16T12:00:00', proximoDestino: 'N/A', estimadoLlegada: '2025-11-16T12:00:00' },
-  ];
-  
-  private mockDetallesTransporte: DetalleTransporte[] = [
-      { idLote: 501, nombreProducto: 'Analgesico Común', cantidadTransportada: 100 , incidenciaReportada: false},
-      { idLote: 502, nombreProducto: 'Vacuna X', cantidadTransportada: 50 , incidenciaReportada: false},
-  ];
-  
-  private mockLotes: LoteProducto[] = [
-      { idLote: 501, idProducto: 101, numeroLote: 'LOTE-A1', cantInicial: 150, cantActual: 100, fechaFabricacion: '2024-01-01', fechaVencimiento: '2025-12-31', estado: 'En Tránsito' },
-      { idLote: 502, idProducto: 102, numeroLote: 'LOTE-B2', cantInicial: 80, cantActual: 50, fechaFabricacion: '2024-06-15', fechaVencimiento: '2026-06-15', estado: 'En Tránsito' },
-  ];
+  constructor(private readonly distribucionApi: DistribucionApiService) {}
 
 
   /**
    * Obtiene la lista principal de órdenes de distribución.
    * Usado en: ordenes-distribucion-list
    */
-  getOrdenesDistribucion(): Observable<OrdenDistribucion[]> {
-    return of(this.mockOrdenes);
+  getOrdenesDistribucion(estado?: string): Observable<OrdenDistribucion[]> {
+    const source$ = estado
+      ? this.distribucionApi.consultarOrdenesDistribucion(estado)
+      : this.obtenerOrdenesPorEstados(this.estadosDefaultConsulta);
+
+    return source$.pipe(map((ordenes) => ordenes.map((orden) => this.mapOrdenDistribucion(orden))));
   }
 
   /**
@@ -71,43 +40,30 @@ export class DistribucionService {
    * Usado en: PopupLoteAsignacionVehiculoComponent
    */
   getDetallesOrdenParaAsignacion(idOrden: number): Observable<DetalleOrdenDistribucion[]> {
-    // 💡 Simulación: Un producto requiere 'Ambiente' y otro 'Frío'.
-    const mockDetalles: DetalleOrdenDistribucion[] = [
-      { 
-        idLote: 501, 
-        nombreProducto: 'Analgesico Común', 
-        cantidadProducto: 100, 
-        condicionTransporteRequerida: 'Ambiente', 
-        idVehiculoAsignado: null,
-        opcionesVehiculo: this.mockVehiculos.filter(v => v.disponible && v.condicionTransporte === 'Ambiente') // Filtra Ambiente
-      },
-      { 
-        idLote: 502, 
-        nombreProducto: 'Vacuna X', 
-        cantidadProducto: 50, 
-        condicionTransporteRequerida: 'Frío', 
-        idVehiculoAsignado: null,
-        opcionesVehiculo: this.mockVehiculos.filter(v => v.disponible && v.condicionTransporte === 'Frío') // Filtra Frío
-      },
-    ];
-
-    return of(mockDetalles);
+    return forkJoin({
+      detalles: this.distribucionApi.consultarDetallesOrden(idOrden),
+      vehiculos: this.distribucionApi.consultarVehiculosDisponibles(),
+    }).pipe(
+      map(({ detalles, vehiculos }) =>
+        detalles.map((detalle) => this.mapDetalleAsignacion(detalle, vehiculos))
+      )
+    );
   }
 
   /**
    * Guarda las asignaciones de vehículos a los lotes y actualiza el estado de la orden.
+   *
+   * Backend requerido:
+   *  1. Exponer un endpoint (ej. POST /api/distribucion/ordenes/{idOrden}/asignaciones) que reciba
+   *     la orden, el id del seguimiento a crear y el arreglo de lotes con idVehiculoAsignado.
+   *  2. Validar disponibilidad/capacidad del vehículo contra el lote antes de persistir.
+   *  3. Persistir la asignación creando el SeguimientoVehiculo y los DetalleTransporte asociados
+   *     en una transacción; retornar el SeguimientoVehiculoDto actualizado.
+   *  4. Responder con envelope { success, message, data } para alinear con DistribucionApiService.
+   * Una vez disponible, reemplazar este throw por la llamada HTTP y refrescar la tabla.
    */
   guardarAsignacionVehiculos(idOrden: number, detalles: DetalleOrdenDistribucion[]): Observable<void> {
-    console.log(`Guardando asignación para Orden ${idOrden}`, detalles);
-    // 🛑 Aquí iría la llamada HTTP: return this.http.post<void>(`/api/distribucion/${idOrden}/asignar`, detalles);
-    
-    // Simulación: Actualizar estado de la orden a 'En Proceso'
-    const ordenIndex = this.mockOrdenes.findIndex(o => o.idOrden === idOrden);
-    if (ordenIndex !== -1) {
-        this.mockOrdenes[ordenIndex].estado = 'Programada';
-    }
-
-    return of(undefined);
+    return throwError(() => new Error(`Asignación de vehículos para la orden ${idOrden} no implementada en el backend actual.`));
   }
   
 
@@ -120,28 +76,38 @@ export class DistribucionService {
    * Usado en: MonitoreoVehiculosListComponent
    */
   getSeguimientoVehiculos(): Observable<SeguimientoVehiculo[]> {
-      return of(this.mockSeguimientos.filter(s => s.estadoActual !== 'Entregada'));
+      return this.distribucionApi.consultarVehiculosEnCamino().pipe(
+        map((seguimientos) => seguimientos.map((seguimiento) => this.mapSeguimiento(seguimiento)))
+      );
   }
   
   /**
    * Obtiene los lotes que están siendo transportados en un seguimiento específico.
    * Usado en: VehiculoLotesListComponent
    */
-  getLotesBySeguimientoId(idSeguimiento: number): Observable<DetalleTransporte[]> {
-      // Simulación: Devuelve todos los lotes mock
-      return of(this.mockDetallesTransporte);
+  getLotesBySeguimientoId(idSeguimiento: number): Observable<DetalleTransporteDto[]> {
+      return this.distribucionApi.consultarLotesDelVehiculo(idSeguimiento).pipe(
+        map((detalles) => detalles.map((detalle) => ({
+          ...detalle,
+          nombreProducto: detalle.nombreProducto ?? `Lote #${detalle.idLote}`,
+        })))
+      );
   }
   
   /**
    * Obtiene la información detallada de un lote específico.
    * Usado en: PopupInfoLoteComponent
+    *
+    * Backend requerido:
+    *  1. Endpoint GET /api/almacenamiento/lotes/{idLote} (o similar) que devuelva LoteProductoDto
+    *     con cantidades actuales y metadatos de trazabilidad.
+    *  2. El servicio debería exponer la información de producto/condición para que la UI pueda
+    *     validar compatibilidad con transporte.
+    *  3. Formato de respuesta debe usar ApiEnvelope para mapearse directamente desde
+    *     DistribucionApiService.
    */
-  getInfoLote(idLote: number): Observable<LoteProducto> {
-      const lote = this.mockLotes.find(l => l.idLote === idLote);
-      if (lote) {
-          return of(lote);
-      }
-      return throwError(() => new Error(`Lote con ID ${idLote} no encontrado.`));
+      getInfoLote(idLote: number): Observable<LoteProducto> {
+        return throwError(() => new Error(`Consulta de información detallada del lote ${idLote} no implementada.`));
   }
   
   /**
@@ -149,98 +115,226 @@ export class DistribucionService {
    * Usado en: MonitoreoVehiculosListComponent (acción 'Info Vehiculo')
    */
   getInfoVehiculo(idVehiculo: number): Observable<Vehiculo> {
-      const vehiculo = this.mockVehiculos.find(v => v.idVehiculo === idVehiculo);
-      if (vehiculo) {
-          return of(vehiculo);
-      }
-      return throwError(() => new Error(`Vehículo con ID ${idVehiculo} no encontrado.`));
+      return this.distribucionApi.consultarVehiculosDisponibles().pipe(
+        map((vehiculos) => {
+          const vehiculo = vehiculos.find((v) => v.id === idVehiculo);
+          if (!vehiculo) {
+            throw new Error(`Vehículo con ID ${idVehiculo} no disponible.`);
+          }
+          return this.mapVehiculoLegacy(vehiculo);
+        })
+      );
   }
 
+  /**
+   * Confirma la entrega física de la orden y actualiza el estado del seguimiento.
+   * Backend requerido:
+   *  1. Endpoint POST /api/distribucion/ordenes/{idOrden}/confirmacion-entrega que invoque
+   *     ServiceActualizarOrdenDistribucion para cerrar el seguimiento y marcar la orden como ENTREGADA.
+   *  2. Debe registrar usuario/fecha de confirmación y devolver estado actualizado para refrescar UI.
+   *  3. Responder ApiEnvelope<void | OrdenDistribucionDto> para alinear estructura.
+   */
   confirmarEntrega(idOrden: number): Observable<void> {
-    console.log(`[DistribucionService] Confirmando entrega para Orden #${idOrden}`);
-    
-    // 🛑 Aquí iría la llamada HTTP: return this.http.post<void>(`/api/distribucion/ordenes/${idOrden}/confirmar-entrega`);
-    
-    // Simulación: Cambiar estado de Orden y Seguimiento a 'Completada' / 'Finalizado'
-    const ordenIndex = this.mockOrdenes.findIndex(o => o.idOrden === idOrden);
-    if (ordenIndex !== -1) {
-      this.mockOrdenes[ordenIndex].estado = 'Entregada';
-    }
-    const seguimientoIndex = this.mockSeguimientos.findIndex(s => s.idOrden === idOrden);
-    if (seguimientoIndex !== -1) {
-        this.mockSeguimientos[seguimientoIndex].estadoActual = 'Entregada';
-    }
-    
-    return of(undefined);
+    return throwError(() => new Error(`Confirmación de entrega para la orden ${idOrden} no implementada.`));
   }
 
+  /**
+   * Cancela una orden programada o en ruta.
+   * Backend requerido:
+   *  1. Endpoint POST /api/distribucion/ordenes/{idOrden}/cancelacion que valide estado actual.
+   *  2. Debe revertir asignaciones de vehículo y liberar lotes dependiendo de la política.
+   *  3. Responder ApiEnvelope<void> y propagar mensaje para notificar en UI.
+   */
   cancelarOrden(idOrden: number): Observable<void> {
-    console.log(`[DistribucionService] Cancelando Orden #${idOrden}`);
-
-    // 🛑 Aquí iría la llamada HTTP: return this.http.post<void>(`/api/distribucion/ordenes/${idOrden}/cancelar`);
-
-    // Simulación: Cambiar estado de Orden a 'Cancelada'
-    const ordenIndex = this.mockOrdenes.findIndex(o => o.idOrden === idOrden);
-    if (ordenIndex !== -1) {
-        this.mockOrdenes[ordenIndex].estado = 'Cancelada';
-    }
-    // Opcional: El backend también debería cancelar el seguimiento asociado
-    
-    return of(undefined);
+    return throwError(() => new Error(`Cancelación para la orden ${idOrden} no implementada.`));
   }
 
+  /**
+   * Ensambla el reporte detallado mezclando información de orden, lotes y seguimiento.
+   * Backend requerido:
+   *  1. Endpoint dedicado (GET /api/distribucion/ordenes/{idOrden}/reporte) que ya relacione
+   *     OrdenDistribucionDto + SeguimientoVehiculoDto + DetalleOrdenDistribucionDto.
+   *  2. El backend debe incluir justificación de cierre y métricas de performance.
+   *  3. Con ese endpoint, este método se reduce a una única llamada HTTP.
+   */
   getDetalleReporteOrden(idOrden: number): Observable<DetalleOrdenCompleta> {
-      // 💡 Simulación de la unión de datos de varias fuentes
-      const orden = this.mockOrdenes.find(o => o.idOrden === idOrden);
-      const seguimiento = this.mockSeguimientos.find(s => s.idOrden === idOrden);
-      
-      if (!orden || !seguimiento) {
-          return throwError(() => new Error(`Orden #${idOrden} no encontrada para reporte.`));
-      }
-      
-      const detalleLotes: DetalleOrdenDistribucion[] = [
-          { idLote: 501, nombreProducto: 'Analgesico Común', cantidadProducto: 100, condicionTransporteRequerida: 'Ambiente', idVehiculoAsignado: 1, opcionesVehiculo: [] },
-          { idLote: 502, nombreProducto: 'Vacuna X', cantidadProducto: 50, condicionTransporteRequerida: 'Frío', idVehiculoAsignado: 3, opcionesVehiculo: [] },
-      ];
+      return forkJoin({
+        ordenes: this.obtenerOrdenesPorEstados(['PENDIENTE', 'PROGRAMADA', 'EN_RUTA', 'ENTREGADA']),
+        detalles: this.distribucionApi.consultarDetallesOrden(idOrden),
+        seguimientos: this.distribucionApi.consultarVehiculosEnCamino(),
+      }).pipe(
+        map(({ ordenes, detalles, seguimientos }) => {
+          const orden = ordenes.find((o) => (o.idOrden ?? o.id) === idOrden);
+          if (!orden) {
+            throw new Error(`Orden #${idOrden} no encontrada para reporte.`);
+          }
 
-      const reporte: DetalleOrdenCompleta = {
-          orden: { ...orden, totalLotes: 2, tieneIncidencias: this.mockIncidencias.some(i => i.idOrden === idOrden) },
-          detallesLotes: detalleLotes,
-          infoSeguimiento: seguimiento,
-          justificacionCierre: (idOrden === 203) 
-            ? "Entrega completada con una demora de 30 minutos debido a incidente de tráfico y leve daño en el empaque del Lote 501."
-            : "Entrega completada a tiempo sin mayores novedades operativas. El vehículo 1 reportó un leve tráfico, pero no afectó la ETA.",
-      };
-      
-      return of(reporte);
+          const seguimiento = seguimientos.find((s) => s.idOrdenDistId === idOrden);
+          if (!seguimiento) {
+            throw new Error(`Seguimiento para la orden #${idOrden} no disponible.`);
+          }
+          return {
+            orden: {
+              ...this.mapOrdenDistribucion(orden),
+              totalLotes: detalles.length,
+              tieneIncidencias: false,
+            },
+            detallesLotes: detalles.map((detalle) => this.mapDetalleAsignacion(detalle, [])),
+            infoSeguimiento: this.mapSeguimiento(seguimiento),
+            justificacionCierre: 'Detalle de cierre no disponible.',
+          } as DetalleOrdenCompleta;
+        })
+      );
   }
   /**
    * Obtiene la lista de incidencias para una orden específica.
    * Usado en: IncidenciasReporteComponent
+    *
+    * Limitación actual: no existe endpoint /ordenes/{idOrden}/incidencias, por lo que derivamos
+    * las incidencias consultando cada vehículo en ruta y filtrando en el front. El backend debería
+    * proporcionar un servicio directo que ya relacione idOrdenDist, detalle y vehículo para evitar
+    * múltiples round-trips.
    */
   getIncidenciasByOrdenId(idOrden: number): Observable<IncidenciaReporte[]> {
-    // Simulación: Filtra el mock de incidencias por el idOrden
-    const incidenciasFiltradas = this.mockIncidencias.filter(i => i.idOrden === idOrden);
-    return of(incidenciasFiltradas);
+    return this.distribucionApi.consultarVehiculosEnCamino().pipe(
+      map((seguimientos) =>
+        seguimientos
+          .filter((seguimiento) => seguimiento.idOrdenDistId === idOrden)
+          .map((seguimiento) => seguimiento.idVehiculo.id)
+      ),
+      switchMap((vehiculosIds) => {
+        if (!vehiculosIds.length) {
+          return of([]);
+        }
+        const solicitudes = vehiculosIds.map((idVehiculo) =>
+          this.distribucionApi.consultarIncidenciasPorVehiculo(idVehiculo)
+        );
+        return forkJoin(solicitudes).pipe(
+          map((respuestas) => respuestas.flat()),
+          map((incidencias) =>
+            incidencias
+              .filter((incidencia) => incidencia.idOrdenDist === idOrden)
+              .map((incidencia) => this.mapIncidenciaReporte(incidencia))
+          )
+        );
+      })
+    );
   }
 
   /**
    * Obtiene la lista de órdenes entregadas para el reporte.
    * Usado en: ReportesEntregaListComponent
+    *
+    * Nota sobre `tieneIncidencias`: actualmente se setea en false porque no existe un API que
+    * devuelva el flag precalculado. El backend debería exponer un campo agregado o un endpoint
+    * /ordenes/{id}/incidencias/resumen que indique si la orden tuvo incidencias para poblar la tabla
+    * sin consultas adicionales.
    */
   getReporteOrdenesEntregadas(): Observable<OrdenReporte[]> {
-    const ordenesCompletadas = this.mockOrdenes.filter(o => o.estado === 'Entregada');
+    return this.distribucionApi.consultarOrdenesDistribucion('ENTREGADA').pipe(
+      switchMap((ordenes) => {
+        if (!ordenes.length) {
+          return of([] as OrdenReporte[]);
+        }
 
-    const ordenesReporte: OrdenReporte[] = ordenesCompletadas.map(orden => {
-        const tieneIncidencia = this.mockIncidencias.some(i => i.idOrden === orden.idOrden);
-        return {
-            ...orden,
-            totalLotes: 2, // Mock: Asumimos 2 lotes por orden entregada
-            tieneIncidencias: tieneIncidencia,
-        } as OrdenReporte;
-    });
+        const solicitudes = ordenes.map((orden) =>
+          this.distribucionApi.consultarDetallesOrden(orden.id).pipe(
+            map((detalles) => ({ orden, detalles }))
+          )
+        );
 
-    return of(ordenesReporte);
+        return forkJoin(solicitudes).pipe(
+          map((resultados) =>
+            resultados.map(({ orden, detalles }) => ({
+              ...this.mapOrdenDistribucion(orden),
+              totalLotes: detalles.length,
+              tieneIncidencias: false,
+            }))
+          )
+        );
+      })
+    );
   }
 
+  private obtenerOrdenesPorEstados(estados: string[]): Observable<OrdenDistribucionDto[]> {
+    if (!estados.length) {
+      return of([]);
+    }
+    const solicitudes = estados.map((estado) => this.distribucionApi.consultarOrdenesDistribucion(estado));
+    return forkJoin(solicitudes).pipe(map((respuestas) => respuestas.flat()));
+  }
+
+  private mapOrdenDistribucion(dto: OrdenDistribucionDto): OrdenDistribucion {
+    return {
+      ...dto,
+      idOrden: dto.idOrden ?? dto.id,
+      fechaEntregaEstimada: dto.fechaEntregaEstimada ?? dto.fechaDistribucion,
+      nombreUsuario: dto.nombreUsuario ?? 'Sin asignar',
+      area: dto.area ?? 'Sin área',
+    };
+  }
+
+  private mapDetalleAsignacion(
+    detalle: DetalleOrdenDistribucionDto,
+    vehiculos: VehiculoDto[]
+  ): DetalleOrdenDistribucion {
+    return {
+      idLote: this.resolveLoteId(detalle.idLote),
+      nombreProducto: this.resolveProductoNombre(detalle.idProducto),
+      cantidadProducto: detalle.cantidad,
+      condicionTransporteRequerida: this.resolveCondicion(detalle.idProducto),
+      idVehiculoAsignado: null,
+      opcionesVehiculo: vehiculos.map((vehiculo) => this.mapVehiculoLegacy(vehiculo)),
+    };
+  }
+
+  private resolveLoteId(idLote: number | { id: number }): number {
+    return typeof idLote === 'number' ? idLote : idLote.id;
+  }
+
+  private resolveProductoNombre(idProducto: number | { nombreProducto?: string; id: number }): string {
+    if (typeof idProducto === 'number') {
+      return `Producto #${idProducto}`;
+    }
+    return idProducto.nombreProducto ?? `Producto #${idProducto.id}`;
+  }
+
+  private resolveCondicion(idProducto: number | { condicionesAlmacenamiento?: string }): string {
+    if (typeof idProducto === 'number') {
+      return 'No especificado';
+    }
+    return idProducto.condicionesAlmacenamiento ?? 'No especificado';
+  }
+
+  private mapVehiculoLegacy(vehiculo: VehiculoDto): Vehiculo {
+    return {
+      ...vehiculo,
+      idVehiculo: vehiculo.id,
+      disponible: vehiculo.estado ? vehiculo.estado === 'Disponible' : undefined,
+    };
+  }
+
+  private mapSeguimiento(dto: SeguimientoVehiculoDto): SeguimientoVehiculo {
+    return {
+      ...dto,
+      idSeguimiento: dto.id,
+      idOrden: dto.idOrden ?? dto.idOrdenDistId,
+      idVehiculoLegacy: dto.idVehiculo.id,
+      placaVehiculo: dto.placaVehiculo ?? dto.idVehiculo.placa,
+    } as SeguimientoVehiculo;
+  }
+
+  private mapIncidenciaReporte(dto: IncidenciaTransporteDto): IncidenciaReporte {
+    return {
+      idIncidencia: dto.id,
+      idOrden: dto.idOrdenDist,
+      idVehiculo: dto.idVehiculo,
+      idDetalleDist: dto.idDetalleDist ?? null,
+      tipoIncidencia: dto.tipoIncidencia,
+      descripcion: dto.descripcion,
+      impacto: (dto.impacto as IncidenciaReporte['impacto']) ?? 'Bajo',
+      fechaReporte: dto.fechaReporte,
+      usuarioReporta: dto.usuarioReporta ?? 'Sistema',
+    };
+  }
 }

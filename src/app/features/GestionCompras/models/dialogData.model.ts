@@ -1,5 +1,5 @@
-import { ProductoCotizacion } from "./productoCotizacion.model";
-import { ProveedorProductoCotizacion } from "./proveedorProductoCotizacion.model";
+import { ProductoCotizacion } from '../../../core/models/producto.model';
+import { ProductoProveedorDto } from './ProductoProveedorDto';
 
 
 export interface PopupProveedorProductoData {
@@ -7,5 +7,5 @@ export interface PopupProveedorProductoData {
 }
 
 export interface PopupProveedorProductoResult {
-  proveedorSeleccionado: ProveedorProductoCotizacion;
+  proveedorSeleccionado: ProductoProveedorDto;
 }

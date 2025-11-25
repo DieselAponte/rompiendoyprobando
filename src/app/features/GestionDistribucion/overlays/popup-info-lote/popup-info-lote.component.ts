@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { InfoLoteDialogData } from '../../models/seguimientoDialog.model';
-import { LoteProducto } from '../../models/loteProducto.model';
+import { InfoLoteDialogData } from '../../models/info-lote-dialog.model';
+import { LoteProducto } from '../../models/lote-producto-info.model';
 import { DistribucionService } from '../../services/distribucion.service';
 import { finalize } from 'rxjs';
 

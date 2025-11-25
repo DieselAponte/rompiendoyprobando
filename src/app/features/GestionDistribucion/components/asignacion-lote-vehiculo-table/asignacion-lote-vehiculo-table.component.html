@@ -40,7 +40,7 @@
               <mat-option [value]="null">-- Sin Asignar --</mat-option>
               
               <!-- Opciones desplegables completas: ID - Capacidad - Tipo -->
-              <mat-option *ngFor="let vehiculo of element.opcionesVehiculo" [value]="vehiculo.idVehiculo">
+              <mat-option *ngFor="let vehiculo of element.opcionesVehiculo" [value]="vehiculo.idVehiculo ?? vehiculo.id">
                 {{ getVehiculoLabel(vehiculo) }}
               </mat-option>
               

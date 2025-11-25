@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { ProveedorProductoCotizacion } from '../../models/proveedorProductoCotizacion.model';
+import { ProductoProveedorDto } from '../../models/ProductoProveedorDto';
 
 @Component({
   selector: 'app-proveedores-productos-table',
@@ -11,20 +11,20 @@ import { ProveedorProductoCotizacion } from '../../models/proveedorProductoCotiz
 })
 export class ProveedoresProductosTableComponent {
 
-  @Input() proveedores: ProveedorProductoCotizacion[] | null = [];
+  @Input() proveedores: ProductoProveedorDto[] | null = [];
   displayedColumns: string[] = [
     'nombreProveedor', 
     'precioReferencial',  
     'accion' // Botón de acción 'Seleccionar'
   ];
 
-  @Output() seleccionar = new EventEmitter<ProveedorProductoCotizacion>();
+  @Output() seleccionar = new EventEmitter<ProductoProveedorDto>();
 
   /**
-   * Emite el objeto ProveedorProductoCotizacion seleccionado.
+   * Emite el objeto ProductoProveedorDto seleccionado.
    * @param proveedor El objeto completo del proveedor seleccionado.
    */
-  onSeleccionar(proveedor: ProveedorProductoCotizacion): void {
+  onSeleccionar(proveedor: ProductoProveedorDto): void {
     this.seleccionar.emit(proveedor);
   }
 }

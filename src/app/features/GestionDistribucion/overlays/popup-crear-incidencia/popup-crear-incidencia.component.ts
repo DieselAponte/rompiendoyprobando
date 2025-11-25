@@ -2,9 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IncidenciaDialogData, IncidenciaDialogResult } from '../../models/incidenciaDialog.model';
+import { IncidenciaDialogData, IncidenciaDialogResult } from '../../models/incidencia-dialog.model';
 import { IncidenciaService } from '../../services/incidencia.service';
-import { IncidenciaTransporteCreatePayload } from '../../models/crearIncidencia.model';
+import { IncidenciaTransporteCreateDto } from '../../models/IncidenciaTransporteCreateDto';
 
 
 @Component({
@@ -101,7 +101,7 @@ export class PopupCrearIncidenciaComponent implements OnInit{
     // 🛑 Lógica para asegurar que idDetalleDist sea null si el checkbox NO está marcado
     const finalDetalleDist = formValue.problemaConLote ? formValue.idDetalleDist : null;
 
-    const payload: IncidenciaTransporteCreatePayload = {
+    const payload: IncidenciaTransporteCreateDto = {
         idVehiculo: formValue.idVehiculo,
         idOrdenDist: formValue.idOrdenDist,
         idUsuarioReporta: this.data.idUsuarioReporta, 

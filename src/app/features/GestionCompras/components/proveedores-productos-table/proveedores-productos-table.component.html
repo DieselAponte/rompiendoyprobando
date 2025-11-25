@@ -3,7 +3,7 @@
 
     <ng-container matColumnDef="nombreProveedor">
       <th mat-header-cell *matHeaderCellDef> Nombre Proveedor </th>
-      <td mat-cell *matCellDef="let element"> **{{element.nombreProveedor}}** </td>
+      <td mat-cell *matCellDef="let element"> **{{element.idProveedor?.nombreProveedor || '—'}}** </td>
     </ng-container>
     
     <ng-container matColumnDef="precioReferencial">

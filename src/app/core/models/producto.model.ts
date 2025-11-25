@@ -32,6 +32,7 @@ export interface ProductoCotizacion {
   idProducto: number;
   nombreProducto: string; // Usamos este para la visualización
   cantidadSolicitada: number;
+  idDetalleSolicitud?: number;
   
   // Datos de la Cotización
   idProveedorSeleccionado: number | null;

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { OrdenCompraResumen } from '../../models/ordenCompraResumen.model';
+import { OrdenCompraResumenDto } from '../../models/OrdenCompraResumenDto';
 
 @Component({
   selector: 'app-ordenes-compra-table',
@@ -10,7 +10,7 @@ import { OrdenCompraResumen } from '../../models/ordenCompraResumen.model';
   styleUrl: './ordenes-compra-table.component.css',
 })
 export class OrdenesCompraTableComponent {
-  @Input() ordenes: OrdenCompraResumen[] | null = []; 
+  @Input() ordenes: OrdenCompraResumenDto[] | null = []; 
 
   // Columnas a mostrar
   displayedColumns: string[] = [

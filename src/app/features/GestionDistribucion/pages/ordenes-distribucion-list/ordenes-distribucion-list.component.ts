@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { OrdenDistribucion } from '../../models/ordenDistribucion.model';
+import { OrdenDistribucion } from '../../models/OrdenDistribucionDto';
 import { SelectorVehiculoDialogData, SelectorVehiculoDialogResult } from '../../models/vehiculoDialog.model';
 import { DistribucionService } from '../../services/distribucion.service';
 import { finalize } from 'rxjs';
 import { PopupLoteAsignacionVehiculoComponent } from '../../overlays/popup-lote-asignacion-vehiculo/popup-lote-asignacion-vehiculo.component';
-import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/confirmacionDialog.model';
+import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/confirmacion-dialog.model';
 import { PopupCancelarOrdenComponent } from '../../overlays/popup-cancelar-orden/popup-cancelar-orden.component';
 
 

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { DetalleTransporte } from '../../models/detalleTransporte.model';
-import { InfoLoteDialogData } from '../../models/seguimientoDialog.model';
+import { DetalleTransporteDto } from '../../models/DetalleTransporteDto';
+import { InfoLoteDialogData } from '../../models/info-lote-dialog.model';
 import { DistribucionService } from '../../services/distribucion.service';
 import { finalize } from 'rxjs';
 import { PopupInfoLoteComponent } from '../../overlays/popup-info-lote/popup-info-lote.component';
@@ -15,7 +15,7 @@ import { PopupInfoLoteComponent } from '../../overlays/popup-info-lote/popup-inf
 })
 export class VehiculoLotesListComponent {
   idSeguimiento: number = 0;
-  detallesTransporte: DetalleTransporte[] | null = null;
+  detallesTransporte: DetalleTransporteDto[] | null = null;
   isLoading: boolean = true;
   
   // Mock para detalles del encabezado (Ejemplo de uso de datos de un seguimiento)

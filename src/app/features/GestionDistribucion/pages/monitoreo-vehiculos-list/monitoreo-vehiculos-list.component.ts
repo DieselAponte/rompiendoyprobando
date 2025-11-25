@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SeguimientoVehiculo } from '../../models/seguimientoVehiculo.model';
-import { Vehiculo } from '../../models/vehiculo.model';
+import { SeguimientoVehiculo } from '../../models/SeguimientoVehiculoDto';
+import { Vehiculo } from '../../models/VehiculoDto';
 import { DistribucionService } from '../../services/distribucion.service';
 import { finalize } from 'rxjs';
 import { InfoVehiculoDialogData } from '../../models/vehiculoDialog.model';
 import { PopupInfoVehiculoComponent } from '../../overlays/popup-info-vehiculo/popup-info-vehiculo.component';
 import { PopupConfirmacionEntregaComponent } from '../../overlays/popup-confirmacion-entrega/popup-confirmacion-entrega.component';
-import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/confirmacionDialog.model';
+import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/confirmacion-dialog.model';
 import { PopupCrearIncidenciaComponent } from '../../overlays/popup-crear-incidencia/popup-crear-incidencia.component';
-import { IncidenciaDialogData, IncidenciaDialogResult } from '../../models/incidenciaDialog.model';
+import { IncidenciaDialogData, IncidenciaDialogResult } from '../../models/incidencia-dialog.model';
 import { forkJoin, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 

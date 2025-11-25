@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { ProductoCotizacion } from '../../models/productoCotizacion.model';
+import { ProductoCotizacion } from '../../../../core/models/producto.model';
 
 @Component({
   selector: 'app-cotizacion-productos-table',

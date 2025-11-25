@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SolicitudCompra } from '../../models/solicitudCompra.model';
+import { SolicitudCompraResumenDto } from '../../models/SolicitudCompraResumenDto';
 import { ComprasService } from '../../services/compras.service';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class SolicitudesListComponent implements OnInit{
 
-  solicitudesPendientes: SolicitudCompra[] | null = null;
+  solicitudesPendientes: SolicitudCompraResumenDto[] | null = null;
   isLoading: boolean = true;
   filtroBusqueda: string = ''; // Modelo para la barra de búsqueda
 
@@ -46,13 +46,13 @@ export class SolicitudesListComponent implements OnInit{
    * Ejecuta la navegación basada en el ID.
    * @param solicitud El objeto SolicitudCompra completo.
    */
-  onVerCotizacion(solicitud: SolicitudCompra): void {
+  onVerCotizacion(solicitud: SolicitudCompraResumenDto): void {
     // 💡 Ejecuta la navegación a la página de cotización con el ID
     this.router.navigate(['/GestionCompras/cotizacion-generacion', solicitud.idSolicitud]);
   }
   
   // 💡 Implementar filtro de búsqueda
-  getSolicitudesFiltradas(): SolicitudCompra[] | null {
+  getSolicitudesFiltradas(): SolicitudCompraResumenDto[] | null {
     if (!this.solicitudesPendientes) {
       return null;
     }

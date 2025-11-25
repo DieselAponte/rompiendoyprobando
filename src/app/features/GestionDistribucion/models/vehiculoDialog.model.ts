@@ -1,5 +1,5 @@
 
-import { DetalleOrdenDistribucion } from "./detalleOrdenDistribucion.model";
+import { DetalleOrdenDistribucion } from './DetalleOrdenDistribucionAsignacion.model';
 // --------------------------------------------------------
 // MODELO - DIALOG DATA (para el Overlay)
 // --------------------------------------------------------

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { PopupProveedorProductoData, PopupProveedorProductoResult } from '../../models/dialogData.model';
-import { ProveedorProductoCotizacion } from '../../models/proveedorProductoCotizacion.model';
+import { ProductoProveedorDto } from '../../models/ProductoProveedorDto';
 import { ComprasService } from '../../services/compras.service'; // Necesitaremos un servicio
 
 import { ProveedoresProductosTableComponent } from '../../components/proveedores-productos-table/proveedores-productos-table.component';
@@ -18,7 +18,7 @@ export class PopupProveedorProductoComponent implements OnInit{
   productoId: number;
   productoNombre: string;
   
-  proveedoresDisponibles: ProveedorProductoCotizacion[] = [];
+  proveedoresDisponibles: ProductoProveedorDto[] = [];
   isLoading = true;
 
   constructor(
@@ -54,7 +54,7 @@ export class PopupProveedorProductoComponent implements OnInit{
    * Se llama cuando la tabla hija emite un proveedor seleccionado.
    * Cierra el diálogo y devuelve el objeto seleccionado.
    */
-  onProveedorSeleccionado(proveedor: ProveedorProductoCotizacion): void {
+  onProveedorSeleccionado(proveedor: ProductoProveedorDto): void {
     const resultado: PopupProveedorProductoResult = {
       proveedorSeleccionado: proveedor
     };

@@ -18,12 +18,12 @@
   <div *ngIf="!isLoading && lote">
     <!-- Lista de información como tarjeta simple -->
     <mat-card class="info-card">
-      <p><strong>N° de Lote:</strong> {{ lote.numeroLote }}</p>
+      <p><strong>N° de Lote:</strong> {{ lote.numeroLote || ('ID #' + lote.idLote) }}</p>
       <p><strong>ID Producto:</strong> {{ lote.idProducto }}</p>
-      <p><strong>Estado:</strong> {{ lote.estado }}</p>
+      <p><strong>Estado:</strong> {{ lote.estado || 'Sin estado' }}</p>
       <mat-divider></mat-divider>
-      <p><strong>Cantidad Inicial:</strong> {{ lote.cantInicial }}</p>
-      <p><strong>Cantidad Actual:</strong> {{ lote.cantActual }}</p>
+      <p><strong>Cantidad Inicial:</strong> {{ (lote.cantInicial !== undefined && lote.cantInicial !== null) ? lote.cantInicial : '—' }}</p>
+      <p><strong>Cantidad Actual:</strong> {{ (lote.cantActual !== undefined && lote.cantActual !== null) ? lote.cantActual : '—' }}</p>
       <mat-divider></mat-divider>
       <p><strong>Fecha de Fabricación:</strong> {{ lote.fechaFabricacion | date:'dd/MM/yyyy' }}</p>
       <p><strong>Fecha de Vencimiento:</strong> {{ lote.fechaVencimiento | date:'dd/MM/yyyy' }}</p>

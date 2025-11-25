@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/ProveedorModels/proveedorDelete';
+import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/ConfirmacionDialog.model';
 
 @Component({
   selector: 'app-popup-confirmacion-eliminacion',

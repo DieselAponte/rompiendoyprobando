@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { SolicitudCompra } from '../../models/solicitudCompra.model';
+import { SolicitudCompraResumenDto } from '../../models/SolicitudCompraResumenDto';
 
 
 @Component({
@@ -11,8 +11,8 @@ import { SolicitudCompra } from '../../models/solicitudCompra.model';
   styleUrl: './solicitudes-compra-table.component.css',
 })
 export class SolicitudesCompraTableComponent {
-  @Input() solicitudes: SolicitudCompra[] | null = null;
-  @Output() cotizar = new EventEmitter<SolicitudCompra>();
+  @Input() solicitudes: SolicitudCompraResumenDto[] | null = null;
+  @Output() cotizar = new EventEmitter<SolicitudCompraResumenDto>();
 
   displayedColumns: string[] = [
     'idSolicitud', 
@@ -24,7 +24,7 @@ export class SolicitudesCompraTableComponent {
     'accion'
   ];
 
-  onCotizar(solicitud: SolicitudCompra): void {
+  onCotizar(solicitud: SolicitudCompraResumenDto): void {
     this.cotizar.emit(solicitud);
   }
 

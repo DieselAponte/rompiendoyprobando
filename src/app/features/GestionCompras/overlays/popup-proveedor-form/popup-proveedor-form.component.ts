@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { Proveedor } from '../../models/ProveedorModels/proveedor.model';
-import { ProveedorCreatePayload } from '../../models/ProveedorModels/proveedorCreate.model';
-import { ProveedorUpdatePayload } from '../../models/ProveedorModels/proveedorUpdate.model';
-import { ProveedorDialogData, ProveedorDialogResult } from '../../models/ProveedorModels/proveedorDialog.model';
+import { ProveedorDto } from '../../models/ProveedorDto';
+import { ProveedorCreateDto } from '../../models/ProveedorCreateDto';
+import { ProveedorUpdateDto } from '../../models/ProveedorUpdateDto';
+import { ProveedorDialogData, ProveedorDialogResult } from '../../models/proveedorDialog.model';
 import { ProveedorService } from '../../services/proveedor.service';
 import { finalize } from 'rxjs';
 
@@ -23,7 +23,7 @@ export class PopupProveedorFormComponent implements OnInit{
   isLoading: boolean = false;
 
   // Referencia al proveedor original (solo en modo edición)
-  originalProveedor?: Proveedor;
+  originalProveedor?: ProveedorDto;
 
   constructor(
     public dialogRef: MatDialogRef<PopupProveedorFormComponent, ProveedorDialogResult>,
@@ -73,7 +73,7 @@ export class PopupProveedorFormComponent implements OnInit{
   /**
    * Carga los datos del proveedor al formulario en modo edición.
    */
-  loadFormData(proveedor: Proveedor): void {
+  loadFormData(proveedor: ProveedorDto): void {
     this.proveedorForm.patchValue({
       id: proveedor.id,
       nombreProveedor: proveedor.nombreProveedor,
@@ -109,7 +109,7 @@ export class PopupProveedorFormComponent implements OnInit{
    * Llama al servicio para crear un nuevo proveedor.
    */
   handleCreate(formValue: any): void {
-    const payload: ProveedorCreatePayload = {
+    const payload: ProveedorCreateDto = {
       nombreProveedor: formValue.nombreProveedor,
       ruc: formValue.ruc,
       direccion: formValue.direccion,
@@ -135,7 +135,7 @@ export class PopupProveedorFormComponent implements OnInit{
    */
   handleUpdate(formValue: any): void {
     const proveedorId = formValue.id;
-    const payload: ProveedorUpdatePayload = {
+    const payload: ProveedorUpdateDto = {
       nombreProveedor: formValue.nombreProveedor,
       direccion: formValue.direccion,
       telefono: formValue.telefono,

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Proveedor } from '../../models/ProveedorModels/proveedor.model';
+import { ProveedorDto } from '../../models/ProveedorDto';
 import { ProveedorService } from '../../services/proveedor.service';
 import { finalize } from 'rxjs';
 import { PopupConfirmacionEliminacionComponent } from '../../overlays/popup-confirmacion-eliminacion/popup-confirmacion-eliminacion.component';
 import { PopupProveedorFormComponent } from '../../overlays/popup-proveedor-form/popup-proveedor-form.component';
-import { ProveedorDialogData, ProveedorDialogResult } from '../../models/ProveedorModels/proveedorDialog.model';
-import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/ProveedorModels/proveedorDelete';
+import { ProveedorDialogData, ProveedorDialogResult } from '../../models/proveedorDialog.model';
+import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/ConfirmacionDialog.model';
 
 @Component({
   selector: 'app-lista-proveedores.component',
@@ -15,7 +15,7 @@ import { ConfirmacionDialogData, ConfirmacionDialogResult } from '../../models/P
   styleUrl: './lista-proveedores.component.css',
 })
 export class ListaProveedoresComponent implements OnInit {
-  proveedores: Proveedor[] | null = null;
+  proveedores: ProveedorDto[] | null = null;
   isLoading: boolean = true;
   filtroBusqueda: string = '';
 
@@ -86,7 +86,7 @@ export class ListaProveedoresComponent implements OnInit {
   /**
    * Abre el overlay para modificar un proveedor existente.
    */
-  onEditarProveedor(proveedor: Proveedor): void {
+  onEditarProveedor(proveedor: ProveedorDto): void {
     const data: ProveedorDialogData = { mode: 'edit', proveedor };
     const dialogRef = this.dialog.open(PopupProveedorFormComponent, {
       width: '600px',
@@ -99,7 +99,7 @@ export class ListaProveedoresComponent implements OnInit {
   /**
    * Abre el overlay de confirmación antes de eliminar.
    */
-  onEliminarProveedor(proveedor: Proveedor): void {
+  onEliminarProveedor(proveedor: ProveedorDto): void {
     const data: ConfirmacionDialogData = {
         titulo: 'Confirmación de Eliminación',
         mensaje: `¿Realmente desea eliminar al proveedor con RUC: ${proveedor.ruc}? Esta acción no se puede deshacer.`,
@@ -143,7 +143,7 @@ export class ListaProveedoresComponent implements OnInit {
 
   // --- FILTERING ---
 
-  getProveedoresFiltrados(): Proveedor[] | null {
+  getProveedoresFiltrados(): ProveedorDto[] | null {
     if (!this.proveedores) {
         return null;
     }

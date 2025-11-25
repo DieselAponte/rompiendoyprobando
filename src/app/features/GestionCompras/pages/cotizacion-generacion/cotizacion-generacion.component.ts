@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ProductoCotizacion } from '../../models/productoCotizacion.model';
-import { ProveedorProductoCotizacion } from '../../models/proveedorProductoCotizacion.model';
+import { ProductoCotizacion } from '../../../../core/models/producto.model';
+import { ProductoProveedorDto } from '../../models/ProductoProveedorDto';
 import { PopupProveedorProductoComponent } from '../../overlays/popup-proveedor-producto/popup-proveedor-producto.component';
 import { ComprasService } from '../../services/compras.service';
 import { ActivatedRoute } from '@angular/router';
@@ -111,7 +111,7 @@ export class CotizacionGeneracionComponent {
     });
   }
 
-  actualizarProducto(producto: ProductoCotizacion, proveedor: ProveedorProductoCotizacion): void {
+  actualizarProducto(producto: ProductoCotizacion, proveedor: ProductoProveedorDto): void {
     if (!this.productosACotizar) return;
 
     const index = this.productosACotizar.findIndex(p => p.idProducto === producto.idProducto);
@@ -119,8 +119,8 @@ export class CotizacionGeneracionComponent {
     if (index !== -1) {
       const productoActualizado = { ...this.productosACotizar[index] };
       
-      productoActualizado.idProveedorSeleccionado = proveedor.id;
-      productoActualizado.nombreProveedorSeleccionado = proveedor.nombreProveedor;
+      productoActualizado.idProveedorSeleccionado = proveedor.idProveedor.id;
+      productoActualizado.nombreProveedorSeleccionado = proveedor.idProveedor.nombreProveedor;
       productoActualizado.precioUnitarioReferencial = proveedor.precioReferencial;
       productoActualizado.subtotal = producto.cantidadSolicitada * proveedor.precioReferencial;
 

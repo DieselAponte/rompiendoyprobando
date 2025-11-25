@@ -14,7 +14,7 @@
     <!-- Lista de información como tarjeta simple -->
     <mat-card class="info-card">
         <h3>Información Principal</h3>
-        <p><strong>ID:</strong> #{{ vehiculo.idVehiculo }}</p>
+        <p><strong>ID:</strong> #{{ vehiculo.idVehiculo ?? vehiculo.id }}</p>
         <p><strong>Placa:</strong> {{ vehiculo.placa }}</p>
         <p><strong>Disponibilidad:</strong> 
           <span [class.text-green-600]="vehiculo.disponible" [class.text-red-600]="!vehiculo.disponible">
@@ -25,9 +25,9 @@
         <mat-divider class="my-3"></mat-divider>
 
         <h3>Detalles Técnicos</h3>
-        <p><strong>Tipo:</strong> {{ vehiculo.tipoVehiculo }}</p>
-        <p><strong>Capacidad:</strong> {{ vehiculo.capacidad }} Toneladas/M³</p>
-        <p><strong>Condición de Transporte:</strong> {{ vehiculo.condicionTransporte }}</p>
+        <p><strong>Tipo:</strong> {{ vehiculo.tipoVehiculo || 'Sin tipo' }}</p>
+        <p><strong>Capacidad:</strong> {{ vehiculo.capacidad ?? 'N/D' }} Toneladas/M³</p>
+        <p><strong>Condición de Transporte:</strong> {{ vehiculo.condicionTransporte || 'Sin restricción' }}</p>
     </mat-card>
   </div>
   

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
-import { DetalleOrdenDistribucion } from '../../models/detalleOrdenDistribucion.model';
+import { DetalleOrdenDistribucion } from '../../models/DetalleOrdenDistribucionAsignacion.model';
 
 @Component({
   selector: 'app-reporte-detalle-lotes-table',

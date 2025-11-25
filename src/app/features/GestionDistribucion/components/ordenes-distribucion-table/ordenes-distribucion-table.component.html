@@ -4,7 +4,7 @@
     <!-- ID Orden Column -->
     <ng-container matColumnDef="idOrden">
       <th mat-header-cell *matHeaderCellDef> OC N° </th>
-      <td mat-cell *matCellDef="let element"> **{{element.idOrden}}** </td>
+      <td mat-cell *matCellDef="let element"> **{{element.idOrden ?? element.id}}** </td>
     </ng-container>
 
     <!-- ID Requerimiento Column -->
@@ -16,32 +16,35 @@
     <!-- Nombre Usuario Column -->
     <ng-container matColumnDef="nombreUsuario">
       <th mat-header-cell *matHeaderCellDef> Solicitante </th>
-      <td mat-cell *matCellDef="let element"> {{element.nombreUsuario}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.nombreUsuario || '—'}} </td>
     </ng-container>
 
     <!-- Área Column -->
     <ng-container matColumnDef="area">
       <th mat-header-cell *matHeaderCellDef> Área </th>
-      <td mat-cell *matCellDef="let element"> {{element.area}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.area || '—'}} </td>
     </ng-container>
 
     <!-- Estado Column -->
     <ng-container matColumnDef="estado">
       <th mat-header-cell *matHeaderCellDef> Estado </th>
-      <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.estado || '—'}} </td>
     </ng-container>
     
     <!-- Prioridad Column -->
     <ng-container matColumnDef="prioridad">
       <th mat-header-cell *matHeaderCellDef> Prioridad </th>
-      <td mat-cell *matCellDef="let element"> {{element.prioridad}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.prioridad || '—'}} </td>
     </ng-container>
     
     <!-- Fecha Entrega Estimada Column -->
     <ng-container matColumnDef="fechaEntregaEstimada">
       <th mat-header-cell *matHeaderCellDef> Entrega Est. </th>
       <td mat-cell *matCellDef="let element"> 
-        {{element.fechaEntregaEstimada | date:'dd/MM/yyyy'}} 
+        <ng-container *ngIf="element.fechaEntregaEstimada || element.fechaDistribucion; else sinFecha">
+          {{ (element.fechaEntregaEstimada || element.fechaDistribucion) | date:'dd/MM/yyyy' }}
+        </ng-container>
+        <ng-template #sinFecha>—</ng-template>
       </td>
     </ng-container>
 
@@ -51,8 +54,8 @@
       <td mat-cell *matCellDef="let element">
         <button 
           color="accent" 
-          [disabled]="element.estado !== 'Pendiente'"
-          (click)="onDesignarMovilidad(element.idOrden)"
+          [disabled]="(element.estado || '').toUpperCase() !== 'PENDIENTE'"
+          (click)="onDesignarMovilidad(element.idOrden ?? element.id)"
         >
           Designar Movilidad
         </button>
@@ -64,7 +67,7 @@
       <td mat-cell *matCellDef="let element">
         <button
           color="accent" 
-          (click)="onCancelarOrden(element.idOrden)"
+          (click)="onCancelarOrden(element.idOrden ?? element.id)"
           >
           Cancelar Orden
         </button>

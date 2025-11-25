@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComprasService } from '../../services/compras.service';
-import { ResumenCompra } from '../../models/resumenCompra.model';
-import { OrdenCompraResumen } from '../../models/ordenCompraResumen.model';
+import { ResumenCompraDto } from '../../models/ResumenCompraDto';
+import { OrdenCompraResumenDto } from '../../models/OrdenCompraResumenDto';
 
 const IGV_RATE = 0.18;
 
@@ -15,8 +15,8 @@ const IGV_RATE = 0.18;
 export class OrdenCompraResumenComponent implements OnInit{
 
   idOrden: number = 0;
-  detalleOrden: OrdenCompraResumen | null = null; // Detalle principal de la OC
-  productosResumen: ResumenCompra[] | null = null; // Productos con proveedores/precios finales
+  detalleOrden: OrdenCompraResumenDto | null = null; // Detalle principal de la OC
+  productosResumen: ResumenCompraDto[] | null = null; // Productos con proveedores/precios finales
   justificacionCompra: string = ''; // Justificación que se guardó en la cotización
 
   isLoading: boolean = true;

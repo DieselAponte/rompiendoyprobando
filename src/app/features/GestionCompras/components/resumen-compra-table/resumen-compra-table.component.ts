@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
-import { ResumenCompra } from '../../models/resumenCompra.model';
+import { ResumenCompraDto } from '../../models/ResumenCompraDto';
 
 @Component({
   selector: 'app-resumen-compra-table',
@@ -10,7 +10,7 @@ import { ResumenCompra } from '../../models/resumenCompra.model';
 })
 export class ResumenCompraTableComponent {
   // La fuente de datos para el resumen de la compra
-  @Input() resumen: ResumenCompra[] | null = []; 
+  @Input() resumen: ResumenCompraDto[] | null = []; 
 
   // Columnas a mostrar
   displayedColumns: string[] = [

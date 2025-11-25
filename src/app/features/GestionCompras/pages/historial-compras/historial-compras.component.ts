@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrdenCompraResumen } from '../../models/ordenCompraResumen.model';
+import { OrdenCompraResumenDto } from '../../models/OrdenCompraResumenDto';
 import { ComprasService } from '../../services/compras.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ComprasService } from '../../services/compras.service';
 })
 
 export class HistorialComprasComponent implements OnInit{
-  ordenesHistoricas: OrdenCompraResumen[] | null = null;
+  ordenesHistoricas: OrdenCompraResumenDto[] | null = null;
   isLoading: boolean = true;
   filtroBusqueda: string = ''; // Modelo para la barra de búsqueda
 
@@ -45,7 +45,7 @@ export class HistorialComprasComponent implements OnInit{
   /**
    * Filtra las órdenes basándose en el texto de búsqueda.
    */
-  getOrdenesFiltradas(): OrdenCompraResumen[] | null {
+  getOrdenesFiltradas(): OrdenCompraResumenDto[] | null {
     if (!this.ordenesHistoricas) {
       return null;
     }

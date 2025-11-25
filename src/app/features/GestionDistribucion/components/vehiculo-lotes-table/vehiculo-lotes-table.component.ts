@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { DetalleTransporte } from '../../models/detalleTransporte.model';
+import { DetalleTransporteDto } from '../../models/DetalleTransporteDto';
 
 @Component({
   selector: 'app-vehiculo-lotes-table',
@@ -10,7 +10,7 @@ import { DetalleTransporte } from '../../models/detalleTransporte.model';
   styleUrl: './vehiculo-lotes-table.component.css',
 })
 export class VehiculoLotesTableComponent {
-  @Input() detalles: DetalleTransporte[] | null = []; 
+  @Input() detalles: DetalleTransporteDto[] | null = [];
 
   displayedColumns: string[] = [
     'idLote', 

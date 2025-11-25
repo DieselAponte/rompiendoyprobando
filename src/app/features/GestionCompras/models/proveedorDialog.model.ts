@@ -1,11 +1,11 @@
-import { Proveedor } from "./proveedor.model";
+import { ProveedorDto } from './ProveedorDto';
 
 /**
  * Datos de entrada para los Overlays de Proveedor (Creación/Edición)
  */
 export interface ProveedorDialogData {
     mode: 'create' | 'edit';
-    proveedor?: Proveedor; // Solo presente en modo 'edit'
+    proveedor?: ProveedorDto; // Solo presente en modo 'edit'
 }
 
 /**
@@ -13,5 +13,5 @@ export interface ProveedorDialogData {
  */
 export interface ProveedorDialogResult {
     success: boolean;
-    data?: Proveedor; // El proveedor creado o actualizado
+    data?: ProveedorDto; // El proveedor creado o actualizado
 }
