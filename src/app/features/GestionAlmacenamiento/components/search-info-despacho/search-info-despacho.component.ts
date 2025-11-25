@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
-import { Producto } from '../../models/producto.model';
+import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-search-info-despacho',
@@ -10,26 +10,20 @@ import { Producto } from '../../models/producto.model';
 })
 export class SearchInfoDespachoComponent implements OnChanges {
   term: string = '';
-  productos: Producto[] = [];
+  productos: ProductoResumenDto[] = [];
   noResults = false;
 
   displayedColumns: string[] = [
-    'id_producto',
-    'nombre_producto',
-    'descripcion_producto',
-    'codigo_digemid',
-    'registro_sanitario',
-    'id_tipo',
-    'id_forma',
-    'condiciones_almacenamiento',
-    'condiciones_transporte',
-    'estado',
-    'fecha_creacion',
-    'fecha_actualizacion',
+    'id',
+    'nombre',
+    'codigo',
+    'forma',
+    'tipo',
+    'almacenamiento',
   ];
 
   @Input() initialCode: string | null = null;
-  @Output() productosEncontrados = new EventEmitter<Producto[]>();
+  @Output() productosEncontrados = new EventEmitter<ProductoResumenDto[]>();
 
   constructor(private almacenamientoService: AlmacenamientoService) {}
 

@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Inventario } from '../../models/inventario.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { InventarioDto } from '../../models/InventarioDto';
 
 @Component({
   selector: 'app-lista-inventario-table',
@@ -8,40 +8,40 @@ import { Inventario } from '../../models/inventario.model';
   styleUrls: ['./lista-inventario-table.component.css'],
 })
 export class ListaInventarioTableComponent {
-  @Input() data: Inventario[] = [];
-  @Output() selectedChange = new EventEmitter<Inventario | null>();
-  @Output() verReporte = new EventEmitter<Inventario>();
+  @Input() data: InventarioDto[] = [];
+  @Output() selectedChange = new EventEmitter<InventarioDto | null>();
+  @Output() verReporte = new EventEmitter<InventarioDto>();
 
   displayedColumns: string[] = [
-    'id_inventario',
-    'id_almacen',
-    'id_lote',
-    'stock_actual',
-    'stock_minimo',
-    'stock_maximo',
-    'ubicacion_especifica',
-    'fecha_creacion',
-    'reporte', // Nuevo botón Ver Reporte Lote
-    'acciones', // Radio selección
+    'id',
+    'almacen',
+    'lote',
+    'numeroLote',
+    'stockActual',
+    'stockMinimo',
+    'fechaVencimiento',
+    'ubicacion',
+    'reporte',
+    'acciones',
   ];
 
   private selectedId: number | null = null;
 
-  isSelected(row: Inventario): boolean {
-    return this.selectedId === row.id_inventario;
+  isSelected(row: InventarioDto): boolean {
+    return this.selectedId === row.id;
   }
 
-  toggleSelection(row: Inventario) {
+  toggleSelection(row: InventarioDto): void {
     if (this.isSelected(row)) {
       this.selectedId = null;
       this.selectedChange.emit(null);
     } else {
-      this.selectedId = row.id_inventario;
+      this.selectedId = row.id;
       this.selectedChange.emit(row);
     }
   }
 
-  verReporteLote(row: Inventario) {
+  verReporteLote(row: InventarioDto): void {
     this.verReporte.emit(row);
   }
 }

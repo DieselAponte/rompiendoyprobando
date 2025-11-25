@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProgramacionService } from '../../services/programacion.service';
-import { Producto } from '../../models/producto.model';
+import { ProgramacionService, DetalleRequerimientoDecision } from '../../services/programacion.service';
 import { DetalleRequerimientoAtenderTableComponent } from '../../components/detalle-requerimiento-atender/detalle-requerimiento-atender-table.component';
 import { PopupRevisarStockProductoComponent } from '../../overlays/popup-revisar-stock-producto/popup-revisar-stock-producto.component';
-import { LoteProducto } from '../../models/lotes_producto.model';
 import { CommonModule } from '@angular/common';
+import { InventarioStockDto } from '../../models/InventarioStockDto';
+import { RequerimientoResumenDto } from '../../models/RequerimientoResumenDto';
 
 @Component({
     selector: 'app-disponibilidad-producto',
@@ -16,11 +16,11 @@ import { CommonModule } from '@angular/common';
 })
 
 export class DisponibilidadProductoComponent implements OnInit {
-    reqIdActual: string | null = null;
-    productos: (Producto & { decision?: 'COMPRAS' | 'DISTRIBUCION' })[] = [];
+    reqIdActual: number | null = null;
+    productos: DetalleRequerimientoDecision[] = [];
     observaciones = '';
     mostrarPopupStock = false;
-    lotesProducto: LoteProducto[] = [];
+    lotesProducto: InventarioStockDto[] = [];
     nombreProductoSeleccionado = '';
 
     constructor(private programacionService: ProgramacionService, private route: ActivatedRoute) {}
@@ -28,29 +28,23 @@ export class DisponibilidadProductoComponent implements OnInit {
     ngOnInit(): void {
         const idFromRoute = this.route.snapshot.paramMap.get('id');
         if (idFromRoute) {
-            this.reqIdActual = idFromRoute;
-            this.programacionService.loadProductosParaAtender(idFromRoute);
+            this.reqIdActual = Number(idFromRoute);
+            this.programacionService.loadProductosParaAtender(this.reqIdActual);
         } else {
-            // fallback: primer requerimiento pendiente
-            this.programacionService.getRequerimientosPendientesTabla().subscribe(p => {
-                if (p.length) {
-                    this.reqIdActual = p[0].id_req;
+            this.programacionService.getRequerimientosPendientesTabla().subscribe((pendientes: RequerimientoResumenDto[]) => {
+                if (pendientes.length) {
+                    this.reqIdActual = pendientes[0].id;
                     this.programacionService.loadProductosParaAtender(this.reqIdActual);
                 }
             });
         }
         this.programacionService.getProductosParaAtender().subscribe(lista => {
-            // preservar decisiones existentes si recarga
-            this.productos = lista.map(m => {
-                const prev = this.productos.find(x => x.id_producto === m.id_producto);
-                return { ...m, decision: prev?.decision };
-            });
+            this.productos = lista;
         });
     }
 
-    onAtender(payload: { productos: (Producto & { decision?: 'COMPRAS' | 'DISTRIBUCION' })[]; observaciones: string }) {
+    onAtender(payload: { productos: DetalleRequerimientoDecision[]; observaciones: string }) {
         if (this.reqIdActual) {
-            // Aquí podríamos persistir decisiones antes de aceptar
             this.programacionService.aceptarRequerimiento(this.reqIdActual);
         }
         history.back();
@@ -58,9 +52,13 @@ export class DisponibilidadProductoComponent implements OnInit {
 
     onVolver() { history.back(); }
 
-    onRevisarStock(producto: Producto) {
-        this.nombreProductoSeleccionado = producto.nombre_producto;
-        this.programacionService.getLotesByProducto(producto.id_producto).subscribe(l => {
+    onRevisarStock(producto: DetalleRequerimientoDecision) {
+        this.nombreProductoSeleccionado = producto.idProducto?.nombreProducto || '';
+        const productoId = producto.idProducto?.id;
+        if (!productoId) {
+            return;
+        }
+        this.programacionService.getLotesByProducto(productoId).subscribe(l => {
             this.lotesProducto = l;
             this.mostrarPopupStock = true;
         });

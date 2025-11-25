@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { DetalleOrdenDistribucion } from '../../models/detalle_ordenDistribucion';
+import { DetalleOrdenDistribucionDto } from '../../models/DetalleOrdenDistribucionDto';
 
 @Component({
 	selector: 'app-popup-detalle-orden-distribucion',
@@ -12,18 +12,18 @@ import { DetalleOrdenDistribucion } from '../../models/detalle_ordenDistribucion
 	styleUrls: ['./popup-detalle-ordenDistribucion.component.css']
 })
 export class PopupDetalleOrdenDistribucionComponent {
-	@Input() data: DetalleOrdenDistribucion[] = [];
+	@Input() data: DetalleOrdenDistribucionDto[] = [];
 	@Output() close = new EventEmitter<void>();
-	@Output() atender = new EventEmitter<DetalleOrdenDistribucion>();
+	@Output() atender = new EventEmitter<DetalleOrdenDistribucionDto>();
 
 	displayedColumns: string[] = [
-		'id_orden_dist',
-		'id_lote',
-		'id_producto',
+		'idOrdenDist',
+		'idLote',
+		'idProducto',
 		'cantidad',
-		'condiciones_transporte',
-		'temperatura_requerida',
+		'condicionesTransporte',
+		'temperaturaRequerida',
 		'observaciones',
-		'fecha_creacion'
+		'fechaCreacion'
 	];
 }

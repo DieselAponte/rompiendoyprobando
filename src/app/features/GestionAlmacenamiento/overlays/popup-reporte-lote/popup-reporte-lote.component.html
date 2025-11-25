@@ -3,10 +3,9 @@
         <h3>Detalle de Movimiento de Inventario</h3>
 
         <div class="info-section">
-            <p><strong>ID Movimiento:</strong> {{ reporte.id_movimiento }}</p>
-            <p><strong>ID Inventario:</strong> {{ reporte.id_inventario }}</p>
-            <p><strong>Tipo Movimiento:</strong> {{ reporte.tipo_movimiento }}</p>
-            <p><strong>Fecha Movimiento:</strong> {{ reporte.fecha_movimiento }}</p>
+            <p><strong>ID Movimiento:</strong> {{ reporte.id }}</p>
+            <p><strong>Tipo Movimiento:</strong> {{ reporte.tipoMovimiento }}</p>
+            <p><strong>Fecha Movimiento:</strong> {{ reporte.fechaMovimiento || '—' }}</p>
         </div>
 
         <h4>Detalles Adicionales</h4>
@@ -16,16 +15,14 @@
                     <tr>
                         <th>Cantidad</th>
                         <th>Usuario Registro</th>
-                        <th>Referencia (ID)</th>
                         <th>Tipo Referencia</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>{{ reporte.cantidad }}</td>
-                        <td>{{ reporte.id_usuario_registro }}</td>
-                        <td>{{ reporte.id_referencia }}</td>
-                        <td>{{ reporte.tipo_referencia }}</td>
+                        <td>{{ reporte.idUsuarioRegistroNombreUsuario || '—' }}</td>
+                        <td>{{ reporte.tipoReferencia || '—' }}</td>
                     </tr>
                 </tbody>
             </table>

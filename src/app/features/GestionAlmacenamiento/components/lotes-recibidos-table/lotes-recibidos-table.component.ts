@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { LotesProducto } from '../../models/lotes_producto.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LoteProductoDto } from '../../models/LoteProductoDto';
 
 @Component({
   selector: 'app-lotes-recibidos-table',
@@ -8,17 +8,16 @@ import { LotesProducto } from '../../models/lotes_producto.model';
   styleUrls: ['./lotes-recibidos-table.component.css'],
 })
 export class LotesRecibidosTableComponent {
-  @Input() data: LotesProducto[] = [];
-  @Output() registrarLote = new EventEmitter<LotesProducto>();
+  @Input() data: LoteProductoDto[] = [];
+  @Output() registrarLote = new EventEmitter<LoteProductoDto>();
 
   displayedColumns: string[] = [
-    'id_lote',
-    'id_producto',
-    'id_orden_compra',
-    'numero_lote',
-    'fecha_fabricacion',
-    'cantidad_inicial',
-    'cantidad_actual',
+    'id',
+    'producto',
+    'numeroLote',
+    'fechaVencimiento',
+    'cantidadInicial',
+    'cantidadActual',
     'estado',
     'acciones',
   ];

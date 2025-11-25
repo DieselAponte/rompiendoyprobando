@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MovimientoInventario } from '../../models/movimiento_inventario.model';
+import { MovimientoInventarioDto } from '../../models/MovimientoInventarioDto';
 
 @Component({
   selector: 'app-popup-reporte-lote',
@@ -8,7 +8,7 @@ import { MovimientoInventario } from '../../models/movimiento_inventario.model';
   styleUrls: ['./popup-reporte-lote.component.css'],
 })
 export class PopupReporteLoteComponent {
-  @Input() reporte: MovimientoInventario | null = null;
+  @Input() reporte: MovimientoInventarioDto | null = null;
   @Output() close = new EventEmitter<void>();
   @Output() resolverIncidencia = new EventEmitter<string>();
 

@@ -1,418 +1,140 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { LotesProducto } from '../models/lotes_producto.model';
-import { Inventario } from '../models/inventario.model';
-import { MovimientoInventario } from '../models/movimiento_inventario.model';
-import { Producto } from '../models/producto.model';
-
-export interface LoteRecibido {
-  id_lote: string;
-  id_proveedor: string;
-  id_orden_comp: string;
-  id_producto: string;
-  cantidad: number;
-  lote: string;
-  fecha_caducidad: string;
-}
-
-export interface LoteAtendido extends LoteRecibido {
-  fecha_registro: string;
-  observaciones: string;
-}
-
-export interface LoteAlmacenado extends LoteRecibido {
-  fecha_almacenamiento: string;
-  ubicacion: string;
-}
+import { Observable, forkJoin, of, catchError, map, switchMap } from 'rxjs';
+import { AlmacenamientoApiService } from '../api/almacenamiento-api.service';
+import { AjusteInventarioDto } from '../models/AjusteInventarioDto';
+import { IncidenciaLoteCreateDto } from '../models/IncidenciaLoteCreateDto';
+import { IncidenciaLoteDto } from '../models/IncidenciaLoteDto';
+import { InventarioDto } from '../models/InventarioDto';
+import { LoteCreateDto } from '../models/LoteCreateDto';
+import { LoteProductoDto } from '../models/LoteProductoDto';
+import { MovimientoInventarioDto } from '../models/MovimientoInventarioDto';
+import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Injectable({ providedIn: 'root' })
 export class AlmacenamientoService {
-  // Devuelve lotes recibidos (estructura simple para registro) usados aún por la página registro-lote
-  getLotesRecibidos(): Observable<LoteRecibido[]> {
-    const data: LoteRecibido[] = [
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2025-12-31',
-      },
-      {
-        id_lote: 'L002',
-        id_proveedor: 'PROV002',
-        id_orden_comp: 'PED002',
-        id_producto: 'P003',
-        cantidad: 50,
-        lote: 'LOTE-XYZ',
-        fecha_caducidad: '2026-06-30',
-      },
-      {
-        id_lote: 'L003',
-        id_proveedor: 'PROV003',
-        id_orden_comp: 'PED003',
-        id_producto: 'P002',
-        cantidad: 200,
-        lote: 'LOTE-DEF',
-        fecha_caducidad: '2025-09-15',
-      },
-    ];
-    return of(data);
+  constructor(private readonly api: AlmacenamientoApiService) {}
+
+  ajustarInventario(dto: AjusteInventarioDto): Observable<void> {
+    return this.api.actualizarInventario(dto).pipe(map(() => void 0));
   }
 
-  getLotesAtendidos(): Observable<Inventario[]> {
-    const data: Inventario[] = [
-      {
-        id_inventario: 1,
-        id_almacen: 1,
-        id_lote: 1,
-        stock_actual: 100,
-        stock_minimo: 10,
-        stock_maximo: 200,
-        ubicacion_especifica: 'Estante A1',
-        fecha_creacion: '2025-08-02',
-        fecha_actualizacion: null,
-      },
-      {
-        id_inventario: 2,
-        id_almacen: 1,
-        id_lote: 2,
-        stock_actual: 50,
-        stock_minimo: 5,
-        stock_maximo: 100,
-        ubicacion_especifica: 'Estante B2',
-        fecha_creacion: '2025-07-16',
-        fecha_actualizacion: null,
-      },
-    ];
-    return of(data);
+  getInventario(): Observable<InventarioDto[]> {
+    return this.api.consultarInventario();
   }
 
-  // Nueva lista de lotes con estructura completa de LotesProducto (para páginas de visualización avanzada)
-  getLotesProducto(): Observable<LotesProducto[]> {
-    const data: LotesProducto[] = [
-      {
-        id_lote: 1,
-        id_producto: 101,
-        id_orden_compra: 1001,
-        numero_lote: 'L-2025-001',
-        fecha_fabricacion: '2025-08-01',
-        cantidad_inicial: 100,
-        cantidad_actual: 100,
-        estado: 'RECIBIDO',
-        ubicacion_almacen: 'Zona de recepción',
-        temperatura_almacenamiento: null,
-        fecha_creacion: '2025-08-02',
-        fecha_actualizacion: null,
-      },
-      {
-        id_lote: 2,
-        id_producto: 102,
-        id_orden_compra: 1002,
-        numero_lote: 'L-2025-002',
-        fecha_fabricacion: '2025-07-15',
-        cantidad_inicial: 50,
-        cantidad_actual: 50,
-        estado: 'RECIBIDO',
-        ubicacion_almacen: 'Zona de recepción',
-        temperatura_almacenamiento: 4,
-        fecha_creacion: '2025-07-16',
-        fecha_actualizacion: null,
-      },
-    ];
-    return of(data);
+  getLotesAtendidos(): Observable<InventarioDto[]> {
+    return this.getInventario();
   }
 
-  getLotesAlmacenados(): Observable<LoteAlmacenado[]> {
-    const data: LoteAlmacenado[] = [
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2026-12-31',
-        fecha_almacenamiento: '2025-12-31',
-        ubicacion: 'Estante A1',
-      },
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2026-12-31',
-        fecha_almacenamiento: '2025-12-31',
-        ubicacion: 'Estante A1',
-      },
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2026-12-31',
-        fecha_almacenamiento: '2025-12-31',
-        ubicacion: 'Estante A1',
-      },
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2026-12-31',
-        fecha_almacenamiento: '2025-12-31',
-        ubicacion: 'Estante A1',
-      },
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2026-12-31',
-        fecha_almacenamiento: '2025-12-31',
-        ubicacion: 'Estante A1',
-      },
-      {
-        id_lote: 'L001',
-        id_proveedor: 'PROV001',
-        id_orden_comp: 'PED001',
-        id_producto: 'P001',
-        cantidad: 100,
-        lote: 'LOTE-ABC',
-        fecha_caducidad: '2026-12-31',
-        fecha_almacenamiento: '2025-12-31',
-        ubicacion: 'Estante A1',
-      },
-    ];
-    return of(data);
+  getDetalleInventario(idInventario: number): Observable<InventarioDto> {
+    return this.api.consultarDetalleInventario(idInventario);
   }
 
-  // (Duplicado eliminado) getLotesProducto ya definido arriba.
-
-  /**
-   * Devuelve el inventario (lotes ya almacenados dentro de un almacén).
-   */
-  getInventario(): Observable<Inventario[]> {
-    const data: Inventario[] = [
-      {
-        id_inventario: 1,
-        id_almacen: 1,
-        id_lote: 1,
-        stock_actual: 100,
-        stock_minimo: 10,
-        stock_maximo: 200,
-        ubicacion_especifica: 'Estante A1',
-        fecha_creacion: '2025-08-02',
-        fecha_actualizacion: null,
-      },
-      {
-        id_inventario: 2,
-        id_almacen: 1,
-        id_lote: 2,
-        stock_actual: 50,
-        stock_minimo: 5,
-        stock_maximo: 100,
-        ubicacion_especifica: 'Estante B2',
-        fecha_creacion: '2025-07-16',
-        fecha_actualizacion: null,
-      },
-    ];
-    return of(data);
-  }
-
-  /**
-   * Movimientos de inventario (registros de ingreso/salida/ajuste) para auditoría/detalle.
-   */
-  getMovimientosInventario(): Observable<MovimientoInventario[]> {
-    const data: MovimientoInventario[] = [
-      {
-        id_movimiento: 1,
-        id_inventario: 1,
-        tipo_movimiento: 'ingreso',
-        cantidad: 100,
-        fecha_movimiento: '2025-08-02T10:00:00Z',
-        id_usuario_registro: 42,
-        id_referencia: 1001,
-        tipo_referencia: 'orden_compra',
-        observacion: 'Registro inicial de lote',
-        fecha_creacion: '2025-08-02T10:00:00Z',
-      },
-      {
-        id_movimiento: 2,
-        id_inventario: 2,
-        tipo_movimiento: 'ingreso',
-        cantidad: 50,
-        fecha_movimiento: '2025-07-16T09:30:00Z',
-        id_usuario_registro: 43,
-        id_referencia: 1002,
-        tipo_referencia: 'orden_compra',
-        observacion: 'Registro inicial de lote refrigerado',
-        fecha_creacion: '2025-07-16T09:30:00Z',
-      },
-    ];
-    return of(data);
-  }
-
-  /**
-   * Productos asociados a inventario por id_inventario (mock). Se asume relación inventario -> lote -> productos.
-   */
-  private productosMock: { lote: number; inventario: number; productos: Producto[] }[] = [
-    {
-      lote: 1,
-      inventario: 1,
-      productos: [
-        {
-          id_producto: 101,
-          nombre_producto: 'Aspirina 500mg',
-          descripcion_producto: 'Analgesico',
-          codigo_digemid: 'DIG001',
-          registro_sanitario: 'RS-123',
-          id_tipo: 1,
-          id_forma: 1,
-          condiciones_almacenamiento: 'Seco',
-          condiciones_transporte: 'Ambiental',
-          estado: 'ACTIVO',
-          fecha_creacion: '2025-08-02',
-          fecha_actualizacion: null,
-        },
-        {
-          id_producto: 102,
-          nombre_producto: 'Ibuprofeno 400mg',
-          descripcion_producto: 'Antiinflamatorio',
-          codigo_digemid: 'DIG002',
-          registro_sanitario: 'RS-456',
-          id_tipo: 1,
-          id_forma: 1,
-          condiciones_almacenamiento: 'Seco',
-          condiciones_transporte: 'Ambiental',
-          estado: 'ACTIVO',
-          fecha_creacion: '2025-08-02',
-          fecha_actualizacion: null,
-        },
-      ],
-    },
-    {
-      lote: 2,
-      inventario: 2,
-      productos: [
-        {
-          id_producto: 103,
-          nombre_producto: 'Paracetamol 500mg',
-          descripcion_producto: 'Antipirético',
-          codigo_digemid: 'DIG003',
-          registro_sanitario: 'RS-789',
-          id_tipo: 1,
-          id_forma: 1,
-          condiciones_almacenamiento: 'Seco',
-          condiciones_transporte: 'Ambiental',
-          estado: 'ACTIVO',
-          fecha_creacion: '2025-07-16',
-          fecha_actualizacion: null,
-        },
-      ],
-    },
-  ];
-
-  getProductosPorInventarioOIdLote(codigo: string): Observable<Producto[]> {
-    const numeric = Number(codigo);
-    if (!codigo || isNaN(numeric)) {
+  getMovimientosInventario(idInventario: number): Observable<MovimientoInventarioDto[]> {
+    if (!idInventario) {
       return of([]);
     }
-    const entry = this.productosMock.find((p) => p.inventario === numeric || p.lote === numeric);
-    return of(entry ? entry.productos : []);
+    return this.api
+      .consultarMovimientosInventario(idInventario)
+      .pipe(catchError(() => of([])));
   }
 
-  /** Catálogo mock de productos para búsqueda directa por código DIGEMID */
-  private productosCatalogo: Producto[] = [
-    {
-      id_producto: 101,
-      nombre_producto: 'Aspirina 500mg',
-      descripcion_producto: 'Analgesico',
-      codigo_digemid: 'DIG001',
-      registro_sanitario: 'RS-123',
-      id_tipo: 1,
-      id_forma: 1,
-      condiciones_almacenamiento: 'Seco',
-      condiciones_transporte: 'Ambiental',
-      estado: 'ACTIVO',
-      fecha_creacion: '2025-08-02',
-      fecha_actualizacion: null,
-    },
-    {
-      id_producto: 102,
-      nombre_producto: 'Ibuprofeno 400mg',
-      descripcion_producto: 'Antiinflamatorio',
-      codigo_digemid: 'DIG002',
-      registro_sanitario: 'RS-456',
-      id_tipo: 1,
-      id_forma: 1,
-      condiciones_almacenamiento: 'Seco',
-      condiciones_transporte: 'Ambiental',
-      estado: 'ACTIVO',
-      fecha_creacion: '2025-08-02',
-      fecha_actualizacion: null,
-    },
-    {
-      id_producto: 103,
-      nombre_producto: 'Paracetamol 500mg',
-      descripcion_producto: 'Antipirético',
-      codigo_digemid: 'DIG003',
-      registro_sanitario: 'RS-789',
-      id_tipo: 1,
-      id_forma: 1,
-      condiciones_almacenamiento: 'Seco',
-      condiciones_transporte: 'Ambiental',
-      estado: 'ACTIVO',
-      fecha_creacion: '2025-07-16',
-      fecha_actualizacion: null,
-    },
-    {
-      id_producto: 104,
-      nombre_producto: 'Amoxicilina 500mg',
-      descripcion_producto: 'Antibiótico',
-      codigo_digemid: 'DIG004',
-      registro_sanitario: 'RS-654',
-      id_tipo: 1,
-      id_forma: 1,
-      condiciones_almacenamiento: 'Seco',
-      condiciones_transporte: 'Ambiental',
-      estado: 'ACTIVO',
-      fecha_creacion: '2025-06-10',
-      fecha_actualizacion: null,
-    },
-    {
-      id_producto: 105,
-      nombre_producto: 'Omeprazol 20mg',
-      descripcion_producto: 'Inhibidor de la bomba de protones',
-      codigo_digemid: 'DIG005',
-      registro_sanitario: 'RS-321',
-      id_tipo: 1,
-      id_forma: 1,
-      condiciones_almacenamiento: 'Seco',
-      condiciones_transporte: 'Ambiental',
-      estado: 'ACTIVO',
-      fecha_creacion: '2025-05-01',
-      fecha_actualizacion: null,
-    },
-  ];
+  getLotesProducto(): Observable<LoteProductoDto[]> {
+    return this.api.consultarInventario().pipe(
+      map((inventario) =>
+        Array.from(
+          new Set(
+            inventario
+              .map((item) => item.idLote?.id)
+              .filter((id): id is number => typeof id === 'number')
+          )
+        )
+      ),
+      switchMap((ids) => {
+        if (!ids.length) {
+          return of([]);
+        }
+        return forkJoin(ids.map((id) => this.api.consultarDetalleLote(id)));
+      }),
+      catchError(() => of([]))
+    );
+  }
 
-  /** Busca un producto por su código DIGEMID. Devuelve null si no existe */
-  getProductoPorCodigoDigemid(codigo: string): Observable<Producto | null> {
+  getLotesAlmacenados(descripcion?: string): Observable<LoteProductoDto[]> {
+    return this.getLotesProducto().pipe(
+      map((lotes) => {
+        const term = descripcion?.trim().toLowerCase();
+        if (!term) {
+          return lotes;
+        }
+        return lotes.filter((lote) => {
+          const searchableValues = [
+            lote.numeroLote,
+            lote.idProducto?.nombreProducto,
+            lote.idProducto?.codigoDigemid
+          ]
+            .filter((value): value is string => !!value)
+            .map((value) => value.toLowerCase());
+          return searchableValues.some((value) => value.includes(term));
+        });
+      })
+    );
+  }
+
+  registrarLote(dto: LoteCreateDto): Observable<LoteProductoDto> {
+    return this.api.registrarLote(dto);
+  }
+
+  registrarIncidencia(dto: IncidenciaLoteCreateDto): Observable<IncidenciaLoteDto> {
+    return this.api.registrarIncidencia(dto);
+  }
+
+  getIncidenciasPorLote(idLote: number): Observable<IncidenciaLoteDto[]> {
+    return this.api.consultarIncidenciasPorLote(idLote);
+  }
+
+  actualizarEstadoOrdenCompra(idOrdenCompra: number, nuevoEstado: string): Observable<void> {
+    return this.api.actualizarEstadoOrdenCompra(idOrdenCompra, nuevoEstado).pipe(map(() => void 0));
+  }
+
+  getProductosPorInventarioOIdLote(codigo: string): Observable<ProductoResumenDto[]> {
+    const parsed = Number(codigo);
+    if (!codigo || Number.isNaN(parsed)) {
+      return of([]);
+    }
+    return this.resolveLoteProductoByCode(parsed).pipe(
+      map((lote) => (lote ? [lote.idProducto] : []))
+    );
+  }
+
+  getProductoPorCodigoDigemid(codigo: string): Observable<ProductoResumenDto | null> {
     if (!codigo) {
       return of(null);
     }
-    const prod = this.productosCatalogo.find(
-      (p) => p.codigo_digemid?.toLowerCase() === codigo.toLowerCase()
+    const normalized = codigo.trim().toLowerCase();
+    return this.getLotesProducto().pipe(
+      map((lotes) =>
+        lotes
+          .map((lote) => lote.idProducto)
+          .find((producto) => (producto.codigoDigemid || '').toLowerCase() === normalized) || null
+      )
     );
-    return of(prod || null);
+  }
+
+  private resolveLoteProductoByCode(code: number): Observable<LoteProductoDto | null> {
+    return this.api.consultarDetalleInventario(code).pipe(
+      switchMap((inventario) => {
+        const loteId = inventario.idLote?.id;
+        if (!loteId) {
+          return of(null);
+        }
+        return this.api.consultarDetalleLote(loteId);
+      }),
+      catchError(() =>
+        this.api.consultarDetalleLote(code).pipe(
+          catchError(() => of(null))
+        )
+      )
+    );
   }
 }

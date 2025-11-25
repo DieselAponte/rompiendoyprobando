@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ProgramacionService} from '../../services/programacion.service';
-import { DetalleRequerimiento } from '../../models/detalle_requerimiento';
+import { ProgramacionService } from '../../services/programacion.service';
+import { RequerimientoResumenDto } from '../../models/RequerimientoResumenDto';
 
 @Component({
     selector: 'app-lista-requerimientos-noatendidos',
@@ -10,15 +10,15 @@ import { DetalleRequerimiento } from '../../models/detalle_requerimiento';
 })
 
 export class ListaRequerimientosComponent implements OnInit {
-    dataOriginal: DetalleRequerimiento[] = [];
-    data: DetalleRequerimiento[] = [];
+    dataOriginal: RequerimientoResumenDto[] = [];
+    data: RequerimientoResumenDto[] = [];
     filterTerm = '';
 
     constructor(private programacionService: ProgramacionService) {}
 
     ngOnInit(): void {
-        this.programacionService.getDetalleRequerimientosPendientes().subscribe(d => {
-            this.dataOriginal = d;
+        this.programacionService.getRequerimientosPendientesTabla().subscribe(requerimientos => {
+            this.dataOriginal = requerimientos;
             this.applyFilter();
         });
     }
@@ -30,6 +30,8 @@ export class ListaRequerimientosComponent implements OnInit {
 
     private applyFilter() {
         const t = this.filterTerm.toLowerCase();
-        this.data = !t ? this.dataOriginal : this.dataOriginal.filter(r => r.id_requerimiento.toLowerCase().includes(t));
+        this.data = !t
+            ? this.dataOriginal
+            : this.dataOriginal.filter(r => `${r.id}`.toLowerCase().includes(t));
     }
 }

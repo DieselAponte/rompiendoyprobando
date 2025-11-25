@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
-import { Producto } from '../../models/producto.model';
+import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-search-info-digemid',
@@ -10,12 +10,12 @@ import { Producto } from '../../models/producto.model';
 })
 export class SearchInfoDigemidComponent {
   codigoDigemid: string = '';
-  productoEncontrado: Producto | null = null;
+  productoEncontrado: ProductoResumenDto | null = null;
   mensajeError: string = '';
   cantidadTexto: string = '';
   mensajeOk: string = '';
 
-  @Output() agregarProducto = new EventEmitter<{ producto: Producto; cantidad: number }>();
+  @Output() agregarProducto = new EventEmitter<{ producto: ProductoResumenDto; cantidad: number }>();
 
   buscando = false;
 

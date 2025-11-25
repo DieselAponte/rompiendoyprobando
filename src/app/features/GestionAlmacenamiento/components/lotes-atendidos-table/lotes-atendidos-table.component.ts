@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Inventario } from '../../models/inventario.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { InventarioDto } from '../../models/InventarioDto';
 
 @Component({
   selector: 'app-lotes-atendidos-table',
@@ -8,18 +8,17 @@ import { Inventario } from '../../models/inventario.model';
   styleUrls: ['./lotes-atendidos-table.component.css'],
 })
 export class LotesAtendidosTableComponent {
-  @Input() data: Inventario[] = [];
-  @Output() verReporte = new EventEmitter<Inventario>();
+  @Input() data: InventarioDto[] = [];
+  @Output() verReporte = new EventEmitter<InventarioDto>();
 
   displayedColumns: string[] = [
-    'id_inventario',
-    'id_almacen',
-    'id_lote',
-    'stock_actual',
-    'stock_minimo',
-    'stock_maximo',
-    'ubicacion_especifica',
-    'fecha_creacion',
+    'id',
+    'almacen',
+    'numeroLote',
+    'stockActual',
+    'stockMinimo',
+    'fechaVencimiento',
+    'ubicacion',
     'acciones',
   ];
 }

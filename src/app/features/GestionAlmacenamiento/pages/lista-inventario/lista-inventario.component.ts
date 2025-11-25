@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
 import { Router } from '@angular/router';
-import { Inventario } from '../../models/inventario.model';
-import { MovimientoInventario } from '../../models/movimiento_inventario.model';
+import { InventarioDto } from '../../models/InventarioDto';
 
 @Component({
   selector: 'app-lista-inventario',
@@ -11,10 +10,9 @@ import { MovimientoInventario } from '../../models/movimiento_inventario.model';
   styleUrls: ['./lista-inventario.component.css'],
 })
 export class ListaInventarioComponent implements OnInit {
-  inventario: Inventario[] = [];
-  inventarioFiltrado: Inventario[] = [];
-  selected: Inventario | null = null;
-  reporteSeleccionado: MovimientoInventario | null = null;
+  inventario: InventarioDto[] = [];
+  inventarioFiltrado: InventarioDto[] = [];
+  selected: InventarioDto | null = null;
   searchTerm: string = '';
 
   constructor(private almacenamientoService: AlmacenamientoService, private router: Router) {}
@@ -33,7 +31,7 @@ export class ListaInventarioComponent implements OnInit {
       return;
     }
     this.inventarioFiltrado = this.inventario.filter((item) =>
-      item.id_inventario.toString().includes(term)
+      item.id.toString().includes(term)
     );
   }
 
@@ -41,20 +39,20 @@ export class ListaInventarioComponent implements OnInit {
     return !!this.searchTerm && this.inventarioFiltrado.length === 0;
   }
 
-  onSelectionChange(item: Inventario | null) {
+  onSelectionChange(item: InventarioDto | null) {
     this.selected = item;
   }
 
-  verReporteLote(item: Inventario) {
+  verReporteLote(item: InventarioDto) {
     // Navegación asumida hacia una ruta de reporte de lote.
     // Ajustar si se requiere abrir overlay/dialog en lugar de navegar.
     this.router.navigate(['/GestionAlmacenamiento/reporte-lote'], {
-      queryParams: { lote: item.id_lote },
+      queryParams: { lote: item.idLote?.id },
     });
   }
 
   registrarSalida() {
-    const inventarioId = this.selected?.id_inventario;
+    const inventarioId = this.selected?.id;
     this.router.navigate(['/GestionAlmacenamiento/registro-salida'], {
       queryParams: { inventario: inventarioId ?? '' },
     });

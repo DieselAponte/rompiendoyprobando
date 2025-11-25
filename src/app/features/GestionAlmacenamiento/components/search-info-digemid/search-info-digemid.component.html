@@ -9,40 +9,36 @@
 
     <div *ngIf="productoEncontrado" class="resultado">
         <table mat-table [dataSource]="[productoEncontrado]" class="mini-table">
-            <ng-container matColumnDef="id_producto">
+            <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>ID</th>
-                <td mat-cell *matCellDef="let p">{{ p.id_producto }}</td>
+                <td mat-cell *matCellDef="let p">{{ p.id }}</td>
             </ng-container>
-            <ng-container matColumnDef="nombre_producto">
+            <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let p">{{ p.nombre_producto }}</td>
+                <td mat-cell *matCellDef="let p">{{ p.nombreProducto }}</td>
             </ng-container>
-            <ng-container matColumnDef="codigo_digemid">
+            <ng-container matColumnDef="codigo">
                 <th mat-header-cell *matHeaderCellDef>Codigo DIGEMID</th>
-                <td mat-cell *matCellDef="let p">{{ p.codigo_digemid }}</td>
+                <td mat-cell *matCellDef="let p">{{ p.codigoDigemid || '—' }}</td>
             </ng-container>
-            <ng-container matColumnDef="registro_sanitario">
-                <th mat-header-cell *matHeaderCellDef>Registro Sanitario</th>
-                <td mat-cell *matCellDef="let p">{{ p.registro_sanitario }}</td>
+            <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                <td mat-cell *matCellDef="let p">{{ p.idTipoNombreTipo || '—' }}</td>
             </ng-container>
-            <ng-container matColumnDef="condiciones_almacenamiento">
+            <ng-container matColumnDef="forma">
+                <th mat-header-cell *matHeaderCellDef>Forma</th>
+                <td mat-cell *matCellDef="let p">{{ p.idFormaNombreForma || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="condiciones">
                 <th mat-header-cell *matHeaderCellDef>Almacenamiento</th>
-                <td mat-cell *matCellDef="let p">{{ p.condiciones_almacenamiento }}</td>
-            </ng-container>
-            <ng-container matColumnDef="condiciones_transporte">
-                <th mat-header-cell *matHeaderCellDef>Transporte</th>
-                <td mat-cell *matCellDef="let p">{{ p.condiciones_transporte }}</td>
-            </ng-container>
-            <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef>Estado</th>
-                <td mat-cell *matCellDef="let p">{{ p.estado }}</td>
+                <td mat-cell *matCellDef="let p">{{ p.condicionesAlmacenamiento || '—' }}</td>
             </ng-container>
 
             <tr mat-header-row
-                *matHeaderRowDef="['id_producto','nombre_producto','codigo_digemid','registro_sanitario','condiciones_almacenamiento','condiciones_transporte','estado']">
+                *matHeaderRowDef="['id','nombre','codigo','tipo','forma','condiciones']">
             </tr>
             <tr mat-row
-                *matRowDef="let row; columns: ['id_producto','nombre_producto','codigo_digemid','registro_sanitario','condiciones_almacenamiento','condiciones_transporte','estado']">
+                *matRowDef="let row; columns: ['id','nombre','codigo','tipo','forma','condiciones']">
             </tr>
         </table>
 

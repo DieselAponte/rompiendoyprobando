@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { DetalleOrdenDistribucion } from '../../models/detalle_ordenDistribucion';
+import { DetalleOrdenDistribucionDto } from '../../models/DetalleOrdenDistribucionDto';
 
 @Component({
 	selector: 'app-orden-distribucion-table',
@@ -12,22 +12,22 @@ import { DetalleOrdenDistribucion } from '../../models/detalle_ordenDistribucion
 	styleUrls: ['./orden-distribucion-table.component.css']
 })
 export class OrdenDistribucionTableComponent {
-	@Input() data: DetalleOrdenDistribucion[] = [];
-	@Output() verDetalle = new EventEmitter<string>(); // id_orden_dist
+	@Input() data: DetalleOrdenDistribucionDto[] = [];
+	@Output() verDetalle = new EventEmitter<number>();
 
 	displayedColumns: string[] = [
-		'id_orden_dist',
-		'id_lote',
-		'id_producto',
+		'idOrdenDist',
+		'idLote',
+		'idProducto',
 		'cantidad',
-		'condiciones_transporte',
-		'temperatura_requerida',
+		'condicionesTransporte',
+		'temperaturaRequerida',
 		'observaciones',
-		'fecha_creacion',
+		'fechaCreacion',
 		'acciones'
 	];
 
-	onVerDetalle(row: DetalleOrdenDistribucion) {
-		this.verDetalle.emit(row.id_orden_dist);
+	onVerDetalle(row: DetalleOrdenDistribucionDto) {
+		this.verDetalle.emit(row.idOrdenDist);
 	}
 }

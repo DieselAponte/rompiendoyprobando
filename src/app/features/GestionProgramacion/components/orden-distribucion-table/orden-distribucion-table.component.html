@@ -1,19 +1,19 @@
 <div class="table-container">
 	<table mat-table [dataSource]="data" class="mat-elevation-z2">
 
-		<ng-container matColumnDef="id_orden_dist">
+		<ng-container matColumnDef="idOrdenDist">
 			<th mat-header-cell *matHeaderCellDef> ID Orden </th>
-			<td mat-cell *matCellDef="let row"> {{ row.id_orden_dist }} </td>
+			<td mat-cell *matCellDef="let row"> {{ row.idOrdenDist }} </td>
 		</ng-container>
 
-		<ng-container matColumnDef="id_lote">
+		<ng-container matColumnDef="idLote">
 			<th mat-header-cell *matHeaderCellDef> ID Lote </th>
-			<td mat-cell *matCellDef="let row"> {{ row.id_lote }} </td>
+			<td mat-cell *matCellDef="let row"> {{ row.idLote }} </td>
 		</ng-container>
 
-		<ng-container matColumnDef="id_producto">
+		<ng-container matColumnDef="idProducto">
 			<th mat-header-cell *matHeaderCellDef> ID Producto </th>
-			<td mat-cell *matCellDef="let row"> {{ row.id_producto }} </td>
+			<td mat-cell *matCellDef="let row"> {{ row.idProducto }} </td>
 		</ng-container>
 
 		<ng-container matColumnDef="cantidad">
@@ -21,14 +21,14 @@
 			<td mat-cell *matCellDef="let row"> {{ row.cantidad }} </td>
 		</ng-container>
 
-		<ng-container matColumnDef="condiciones_transporte">
+		<ng-container matColumnDef="condicionesTransporte">
 			<th mat-header-cell *matHeaderCellDef> Condiciones Transporte </th>
-			<td mat-cell *matCellDef="let row"> {{ row.condiciones_transporte || '-' }} </td>
+			<td mat-cell *matCellDef="let row"> {{ row.condicionesTransporte || '-' }} </td>
 		</ng-container>
 
-		<ng-container matColumnDef="temperatura_requerida">
+		<ng-container matColumnDef="temperaturaRequerida">
 			<th mat-header-cell *matHeaderCellDef> Temp. Req. </th>
-			<td mat-cell *matCellDef="let row"> {{ row.temperatura_requerida || '-' }} </td>
+			<td mat-cell *matCellDef="let row"> {{ row.temperaturaRequerida || '-' }} </td>
 		</ng-container>
 
 		<ng-container matColumnDef="observaciones">
@@ -36,9 +36,9 @@
 			<td mat-cell *matCellDef="let row"> {{ row.observaciones || '-' }} </td>
 		</ng-container>
 
-		<ng-container matColumnDef="fecha_creacion">
+		<ng-container matColumnDef="fechaCreacion">
 			<th mat-header-cell *matHeaderCellDef> Fecha Creación </th>
-			<td mat-cell *matCellDef="let row"> {{ row.fecha_creacion || '-' }} </td>
+			<td mat-cell *matCellDef="let row"> {{ row.fechaCreacion || '-' }} </td>
 		</ng-container>
 
 		<ng-container matColumnDef="acciones">

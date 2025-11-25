@@ -6,9 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Producto } from '../../models/producto.model';
-
-interface ProductoDecision extends Producto { decision?: 'COMPRAS' | 'DISTRIBUCION'; }
+import { DetalleRequerimientoDecision } from '../../services/programacion.service';
 
 @Component({
   selector: 'app-detalle-requerimiento-atender-table',
@@ -18,24 +16,19 @@ interface ProductoDecision extends Producto { decision?: 'COMPRAS' | 'DISTRIBUCI
   styleUrls: ['./detalle-requerimiento-atender-table.component.css']
 })
 export class DetalleRequerimientoAtenderTableComponent {
-  @Input() data: ProductoDecision[] = [];
+  @Input() data: DetalleRequerimientoDecision[] = [];
   @Input() observaciones = '';
   @Output() observacionesChange = new EventEmitter<string>();
-  @Output() atender = new EventEmitter<{ productos: ProductoDecision[]; observaciones: string }>();
-  @Output() revisarStock = new EventEmitter<ProductoDecision>();
+  @Output() atender = new EventEmitter<{ productos: DetalleRequerimientoDecision[]; observaciones: string }>();
+  @Output() revisarStock = new EventEmitter<DetalleRequerimientoDecision>();
   @Output() volver = new EventEmitter<void>();
 
   displayedColumns: string[] = [
     'revisar',
-    'id_producto',
-    'nombre_producto',
-    'descripcion_producto',
-    'cantidadsolicitada',
-    'codigo_digemid',
-    'registro_sanitario',
-    'id_tipo',
-    'id_forma',
-    'estado',
+    'producto',
+    'cantidad',
+    'condiciones',
+    'observacion',
     'decision'
   ];
 

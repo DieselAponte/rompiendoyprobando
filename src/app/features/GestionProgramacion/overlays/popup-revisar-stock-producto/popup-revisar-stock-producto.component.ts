@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { LoteProducto } from '../../models/lotes_producto.model';
+import { InventarioStockDto } from '../../models/InventarioStockDto';
 
 @Component({
 	selector: 'app-popup-revisar-stock-producto',
@@ -13,16 +13,16 @@ import { LoteProducto } from '../../models/lotes_producto.model';
 })
 export class PopupRevisarStockProductoComponent {
 	@Input() nombreProducto = '';
-	@Input() lotes: LoteProducto[] = [];
+	@Input() lotes: InventarioStockDto[] = [];
 	@Output() close = new EventEmitter<void>();
 
 	displayedColumns: string[] = [
-		'numero_lote',
-		'fecha_fabricacion',
-		'fecha_vencimiento',
-		'cantidad_actual',
-		'ubicacion_almacen',
-		'temperatura_almacenamiento',
-		'fecha_creacion'
+		'numeroLote',
+		'fechaFabricacion',
+		'fechaVencimiento',
+		'stockActual',
+		'ubicacionAlmacen',
+		'temperaturaAlmacenamiento',
+		'fechaRegistro'
 	];
 }

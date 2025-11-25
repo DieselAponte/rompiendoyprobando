@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Producto } from '../../models/producto.model';
+import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-prod-pertenece-lote',
@@ -8,7 +8,7 @@ import { Producto } from '../../models/producto.model';
   standalone: false,
 })
 export class ProdPerteneceLoteComponent {
-  @Input() items: { producto: Producto; cantidad: number }[] = [];
+  @Input() items: { producto: ProductoResumenDto; cantidad: number }[] = [];
   @Output() eliminar = new EventEmitter<number>();
 
   displayedColumns = ['id_producto', 'nombre_producto', 'codigo_digemid', 'cantidad', 'acciones'];

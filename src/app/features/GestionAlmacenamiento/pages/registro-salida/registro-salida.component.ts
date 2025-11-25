@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Producto } from '../../models/producto.model';
+import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-registro-salida',
@@ -9,7 +9,7 @@ import { Producto } from '../../models/producto.model';
   standalone: false,
 })
 export class RegistroSalidaComponent implements OnInit {
-  productos: Producto[] = [];
+  productos: ProductoResumenDto[] = [];
   inventarioParam: string | null = null;
 
   constructor(private route: ActivatedRoute) {}

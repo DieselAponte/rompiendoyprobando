@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
-import { LotesProducto } from '../../models/lotes_producto.model';
-import { Producto } from '../../models/producto.model';
+import { LoteProductoDto } from '../../models/LoteProductoDto';
+import { ProductoResumenDto } from '../../GestionProgramacion/models/DetalleRequerimientoDto';
 
 @Component({
   selector: 'app-registro-lote',
@@ -11,26 +11,21 @@ import { Producto } from '../../models/producto.model';
   styleUrls: ['./registro-lote.component.css'],
 })
 export class RegistroLoteComponent implements OnInit {
-  lote?: LotesProducto;
+  lote?: LoteProductoDto;
   observaciones: string = '';
   // controla la visibilidad del popup de registro de incidencia
   mostrarPopupIncidencia = false;
   // Productos agregados al lote (desde componente search-info-digemid)
-  productosDelLote: { producto: Producto; cantidad: number }[] = [];
+  productosDelLote: { producto: ProductoResumenDto; cantidad: number }[] = [];
   errorCarga: string = '';
   displayedColumns: string[] = [
-    'id_lote',
-    'id_producto',
-    'id_orden_compra',
-    'numero_lote',
-    'fecha_fabricacion',
-    'cantidad_inicial',
-    'cantidad_actual',
+    'id',
+    'producto',
+    'numeroLote',
+    'fechaVencimiento',
+    'cantidadInicial',
+    'cantidadActual',
     'estado',
-    'ubicacion_almacen',
-    'temperatura_almacenamiento',
-    'fecha_creacion',
-    'fecha_actualizacion',
   ];
 
   constructor(
@@ -51,7 +46,7 @@ export class RegistroLoteComponent implements OnInit {
       return;
     }
     this.almacenamientoService.getLotesProducto().subscribe((lotes) => {
-      this.lote = lotes.find((l) => l.id_lote === numericId);
+      this.lote = lotes.find((l) => l.id === numericId);
       if (!this.lote) {
         this.errorCarga = `No se encontró información para el lote (${numericId}).`;
       }
@@ -91,12 +86,12 @@ export class RegistroLoteComponent implements OnInit {
   }
 
   // Maneja agregado de producto desde componente hijo
-  handleAgregarProducto(event: { producto: Producto; cantidad: number }): void {
+  handleAgregarProducto(event: { producto: ProductoResumenDto; cantidad: number }): void {
     if (!event?.producto || !event.cantidad || event.cantidad <= 0) {
       return;
     }
     const idx = this.productosDelLote.findIndex(
-      (p) => p.producto.id_producto === event.producto.id_producto
+      (p) => p.producto.id === event.producto.id
     );
     if (idx >= 0) {
       const updated = [...this.productosDelLote];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProgramacionService } from '../../services/programacion.service';
-import { DetalleOrdenDistribucion } from '../../models/detalle_ordenDistribucion';
-import { DetalleSolicitud } from '../../models/detalle_solicitud';
+import { DetalleOrdenDistribucionDto } from '../../models/DetalleOrdenDistribucionDto';
+import { DetalleSolicitudCompraDto } from '../../models/DetalleSolicitudCompraDto';
 
 type ModoTabla = 'DISTRIBUCION' | 'COMPRAS';
 
@@ -20,15 +20,15 @@ import { PopupDetalleSolicitudDeCompraComponent } from '../../overlays/popup-det
 })
 export class ListaRequerimientosAtendidosComponent implements OnInit {
   currentMode: ModoTabla = 'DISTRIBUCION';
-  ordenDataOriginal: DetalleOrdenDistribucion[] = [];
-  solicitudDataOriginal: DetalleSolicitud[] = [];
-  filteredOrdenData: DetalleOrdenDistribucion[] = [];
-  filteredSolicitudData: DetalleSolicitud[] = [];
+  ordenDataOriginal: DetalleOrdenDistribucionDto[] = [];
+  solicitudDataOriginal: DetalleSolicitudCompraDto[] = [];
+  filteredOrdenData: DetalleOrdenDistribucionDto[] = [];
+  filteredSolicitudData: DetalleSolicitudCompraDto[] = [];
 
   showPopupDistribucion = false;
-  distribucionDetalle: DetalleOrdenDistribucion[] = [];
+  distribucionDetalle: DetalleOrdenDistribucionDto[] = [];
   showPopupSolicitud = false;
-  solicitudDetalle: DetalleSolicitud[] = [];
+  solicitudDetalle: DetalleSolicitudCompraDto[] = [];
 
   constructor(private programacionService: ProgramacionService) {}
 
@@ -51,19 +51,19 @@ export class ListaRequerimientosAtendidosComponent implements OnInit {
   private applyFilter(term: string, modo: ModoTabla) {
     const normalized = term.trim().toLowerCase();
     if (modo === 'DISTRIBUCION') {
-      this.filteredOrdenData = this.ordenDataOriginal.filter(r => !normalized || r.id_orden_dist.toLowerCase().includes(normalized));
+      this.filteredOrdenData = this.ordenDataOriginal.filter(r => !normalized || `${r.idOrdenDist}`.toLowerCase().includes(normalized));
     } else {
-      this.filteredSolicitudData = this.solicitudDataOriginal.filter(r => !normalized || r.id_solicitud.toLowerCase().includes(normalized));
+      this.filteredSolicitudData = this.solicitudDataOriginal.filter(r => !normalized || `${r.id}`.toLowerCase().includes(normalized));
     }
   }
 
-  openDistribucion(id: string) {
-    this.distribucionDetalle = this.programacionService.getOrdenDistribucionById(id);
+  openDistribucion(id: number) {
+    this.distribucionDetalle = this.programacionService.getOrdenDistribucionById(String(id));
     this.showPopupDistribucion = true;
   }
 
-  openSolicitud(id: string) {
-    this.solicitudDetalle = this.programacionService.getSolicitudCompraById(id);
+  openSolicitud(id: number) {
+    this.solicitudDetalle = this.programacionService.getSolicitudCompraById(String(id));
     this.showPopupSolicitud = true;
   }
 }

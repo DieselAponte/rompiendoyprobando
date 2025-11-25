@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { DetalleSolicitud } from '../../models/detalle_solicitud';
+import { DetalleSolicitudCompraDto } from '../../models/DetalleSolicitudCompraDto';
 
 @Component({
 	selector: 'app-solicitud-compras-table',
@@ -12,20 +12,20 @@ import { DetalleSolicitud } from '../../models/detalle_solicitud';
 	styleUrls: ['./solicitud-compras-table.component.css']
 })
 export class SolicitudComprasTableComponent {
-	@Input() data: DetalleSolicitud[] = [];
-	@Output() verDetalle = new EventEmitter<string>(); // id_solicitud
+	@Input() data: DetalleSolicitudCompraDto[] = [];
+	@Output() verDetalle = new EventEmitter<number>();
 
 	displayedColumns: string[] = [
-		'id_solicitud',
-		'id_producto',
-		'cantidad',
-		'observacion',
-		'fecha_creacion',
-		'fecha_actual',
+		'id',
+		'producto',
+		'cantidadSolicitada',
+		'proveedorSeleccionado',
+		'precioReferencial',
+		'estado',
 		'acciones'
 	];
 
-	onVerDetalle(row: DetalleSolicitud) {
-		this.verDetalle.emit(row.id_solicitud);
+	onVerDetalle(row: DetalleSolicitudCompraDto) {
+		this.verDetalle.emit(row.id);
 	}
 }

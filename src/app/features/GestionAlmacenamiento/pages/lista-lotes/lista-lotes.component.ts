@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlmacenamientoService } from '../../services/almacenamiento.service';
-import { LotesProducto } from '../../models/lotes_producto.model';
-import { Inventario } from '../../models/inventario.model';
-import { MovimientoInventario } from '../../models/movimiento_inventario.model';
+import { LoteProductoDto } from '../../models/LoteProductoDto';
+import { InventarioDto } from '../../models/InventarioDto';
+import { MovimientoInventarioDto } from '../../models/MovimientoInventarioDto';
 
 @Component({
   selector: 'app-lista-lotes',
@@ -11,10 +11,10 @@ import { MovimientoInventario } from '../../models/movimiento_inventario.model';
   styleUrls: ['./lista-lotes.component.css'],
 })
 export class ListaLotesComponent implements OnInit {
-  lotesRecibidos: LotesProducto[] = [];
-  lotesAtendidos: Inventario[] = [];
+  lotesRecibidos: LoteProductoDto[] = [];
+  lotesAtendidos: InventarioDto[] = [];
 
-  reporteSeleccionado: MovimientoInventario | null = null;
+  reporteSeleccionado: MovimientoInventarioDto | null = null;
 
   constructor(private almacenamientoService: AlmacenamientoService) {}
 
@@ -25,18 +25,16 @@ export class ListaLotesComponent implements OnInit {
       .subscribe((data) => (this.lotesAtendidos = data));
   }
 
-  onRegistrarLote(lote: LotesProducto) {
+  onRegistrarLote(lote: LoteProductoDto) {
     console.log('Registrar lote:', lote);
   }
 
-  onVerReporte(item: Inventario) {
-    // Buscar el movimiento asociado al inventario seleccionado
-    this.almacenamientoService.getMovimientosInventario().subscribe((movimientos) => {
-      const movimiento = movimientos.find((m) => m.id_inventario === item.id_inventario);
-      if (movimiento) {
-        this.reporteSeleccionado = movimiento;
+  onVerReporte(item: InventarioDto) {
+    this.almacenamientoService.getMovimientosInventario(item.id).subscribe((movimientos) => {
+      if (movimientos.length > 0) {
+        this.reporteSeleccionado = movimientos[0];
       } else {
-        console.warn('No se encontró movimiento para el inventario:', item.id_inventario);
+        console.warn('No se encontró movimiento para el inventario:', item.id);
       }
     });
   }

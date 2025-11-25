@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { DetalleSolicitud } from '../../models/detalle_solicitud';
+import { DetalleSolicitudCompraDto } from '../../models/DetalleSolicitudCompraDto';
 
 @Component({
   selector: 'app-popup-detalle-solicitud-de-compra',
@@ -12,16 +12,16 @@ import { DetalleSolicitud } from '../../models/detalle_solicitud';
   styleUrls: ['./popup-detalle-solicitud-de-compra.component.css']
 })
 export class PopupDetalleSolicitudDeCompraComponent {
-  @Input() data: DetalleSolicitud[] = [];
+  @Input() data: DetalleSolicitudCompraDto[] = [];
   @Output() close = new EventEmitter<void>();
-  @Output() atender = new EventEmitter<DetalleSolicitud>();
+  @Output() atender = new EventEmitter<DetalleSolicitudCompraDto>();
 
   displayedColumns: string[] = [
-    'id_solicitud',
-    'id_producto',
-    'cantidad',
-    'observacion',
-    'fecha_creacion',
-    'fecha_actual'
+    'id',
+    'producto',
+    'cantidadSolicitada',
+    'proveedorSeleccionado',
+    'precioReferencial',
+    'estado'
   ];
 }
